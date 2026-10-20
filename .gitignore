@@ -1,0 +1,7 @@
+# Devpost Learn - keep personal learning context out of commits
+/devpost/learner-profile.md
+
+# Ignore local credential files
+.env
+.env.*
+!.env.example

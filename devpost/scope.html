@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buno — Scope Review</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --coffee: #4B3621;
+      --coffee-light: #6F4E37;
+      --coffee-lighter: #8B6914;
+      --cream: #F5F0E8;
+      --cream-dark: #E8DFD4;
+      --danger: #C0392B;
+      --middle: #D4AC0D;
+      --safe: #27AE60;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--cream); color: var(--coffee); }
+    .zone-safe { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+    .zone-middle { background: linear-gradient(135deg, #D4AC0D, #F39C12); }
+    .zone-danger { background: linear-gradient(135deg, #C0392B, #E74C3C); }
+    .reveal { opacity: 0; transform: translateY(20px); transition: all 0.4s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .mermaid { background: white; border-radius: 12px; padding: 1rem; }
+    input[type="range"] { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; background: var(--cream-dark); outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--coffee); cursor: pointer; }
+  </style>
+</head>
+<body class="min-h-screen py-12 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <header class="text-center mb-12 reveal">
+      <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-6 py-3 rounded-full mb-4 shadow-sm">
+        <span class="text-3xl">🐰</span>
+        <h1 class="text-2xl font-bold text-coffee">Buno</h1>
+      </div>
+      <p class="text-coffee-light text-lg max-w-2xl mx-auto">Scope Review — Qualitative Zone Budgeting App</p>
+      <p class="text-sm text-coffee-light/70 mt-2">Devpost Learn · Build With AI: Basics</p>
+    </header>
+
+    <!-- Kernel Card -->
+    <section class="mb-8 reveal" style="transition-delay: 100ms;">
+      <div class="bg-white rounded-2xl shadow-lg p-6 border-l-8 border-coffee">
+        <h2 class="text-xl font-bold text-coffee mb-2">🎯 The Unique Kernel</h2>
+        <p class="text-coffee-light leading-relaxed">Qualitative zone system (Safe / Middle / Danger) with human-readable notes instead of exact numbers — <strong>deliberate ambiguity as a behavioral nudge</strong>. The "health bar" visualizes budget health vaguely, not precisely.</p>
+        <div class="mt-4 flex gap-2 flex-wrap">
+          <span class="px-3 py-1 rounded-full text-xs font-medium zone-safe text-white">Safe > 60%</span>
+          <span class="px-3 py-1 rounded-full text-xs font-medium zone-middle text-white">Middle 20–60%</span>
+          <span class="px-3 py-1 rounded-full text-xs font-medium zone-danger text-white">Danger < 20%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Diagram -->
+    <section class="mb-8 reveal" style="transition-delay: 200ms;">
+      <h2 class="text-xl font-bold text-coffee mb-4">🗺️ Architecture: User → Core Loop → Proof</h2>
+      <div class="mermaid" id="arch-diagram">
+flowchart TD
+    U[User: Monthly budgeter<br/>Blows last 20%] -->|opens| Z[Zone Tab<br/>Health bar + zone note<br/>GSAP animated]
+    U -->|checks| A[Activity Tab<br/>Pseudo-bank feed<br/>+ manual cash entry]
+    Z -->|shows| K[Kernel<br/>Qualitative zones<br/>Safe/Middle/Danger]
+    A -->|logs cash| K
+    K -->|triggers| N[Behavioral Nudge<br/>Human note rotates<br/>3-4 variants]
+    N -->|prevents| O[Proof<br/>No 'fuck it' spending<br/>Demo: skit + live]
+    
+    classDef user fill:#F5F0E8,stroke:#4B3621,stroke-width:2px;
+    classDef core fill:#4B3621,color:#F5F0E8,stroke-width:2px;
+    classDef kernel fill:#C0392B,color:#F5F0E8,stroke-width:3px;
+    classDef proof fill:#27AE60,color:#F5F0E8,stroke-width:2px;
+    
+    class U user;
+    class Z,A core;
+    class K kernel;
+    class N,O proof;
+      </div>
+    </div>
+  </section>
+
+  <!-- Now / Later / Cut Tabs -->
+  <section class="mb-8 reveal" style="transition-delay: 300ms;">
+    <h2 class="text-xl font-bold text-coffee mb-4">📦 Scope Boundary: Now / Later / Cut</h2>
+    
+    <div class="flex gap-2 mb-4 flex-wrap" id="tab-buttons">
+      <button data-tab="now" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all zone-safe text-white">Now (POC)</button>
+      <button data-tab="later" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all bg-coffee-lighter/20 text-coffee hover:bg-coffee-lighter/40">Later</button>
+      <button data-tab="cut" class="tab-btn px-4 py-2 rounded-lg font-medium transition-all bg-danger/10 text-danger hover:bg-danger/20">Explicitly Cut</button>
+    </div>
+
+    <div id="tab-now" class="tab-content space-y-3">
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">Zone engine: Safe >60% / Middle 20-60% / Danger <20%</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">Health bar: GSAP-animated, vague segments, zone-color coded</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">Two tabs: Zone (health bar + rotating human notes) + Activity (feed + cash entry)</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">Pseudo bank sandbox: fake transactions, auto-import on load</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">Coffee brown theme, bunny logo, minimal typography</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">GSAP entrance (bunny reveal) + zone transition animations</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-safe reveal">Single monthly budget set on first visit (localStorage)</div>
+    </div>
+
+    <div id="tab-later" class="tab-content hidden space-y-3">
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-middle reveal">Real bank API integration (UPI, bank statements)</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-middle reveal">Multiple budgets / accounts</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-middle reveal">Historical trends & analytics</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-middle reveal">User authentication & cloud sync</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-middle reveal">Export / sharing / PWA</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-middle reveal">Custom zone thresholds</div>
+    </div>
+
+    <div id="tab-cut" class="tab-content hidden space-y-3">
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-danger reveal">Exact remaining balance display (violates kernel)</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-danger reveal">Budget Planner / Goals / Accounts pages (kernel is zone, not planning)</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-danger reveal">Detailed categorization / tagging</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-danger reveal">Multi-user / household budgets</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-danger reveal">Notifications / alerts</div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-danger reveal">Deployment (optional per hackathon)</div>
+    </div>
+  </section>
+
+  <!-- Demo Flow -->
+  <section class="mb-8 reveal" style="transition-delay: 400ms;">
+    <h2 class="text-xl font-bold text-coffee mb-4">🎬 Demo Video Flow</h2>
+    <div class="space-y-3">
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-coffee reveal flex items-start gap-3">
+        <span class="text-2xl">1️⃣</span>
+        <div><strong>Skit (15s):</strong> Person sees ₹200 left → "Fuck it, I'll spend it" → spends it all</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-coffee reveal flex items-start gap-3">
+        <span class="text-2xl">2️⃣</span>
+        <div><strong>Hook (10s):</strong> "Ever been there? Buno flips the script."</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-coffee reveal flex items-start gap-3">
+        <span class="text-2xl">3️⃣</span>
+        <div><strong>Live Demo (45s):</strong> Load sandbox → Zone tab (health bar + note) → Activity tab → Add cash → Watch zone shift with GSAP</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-coffee reveal flex items-start gap-3">
+        <span class="text-2xl">4️⃣</span>
+        <div><strong>Close (10s):</strong> "Deliberate ambiguity. Better decisions. Buno."</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Health Bar Preview -->
+  <section class="mb-8 reveal" style="transition-delay: 500ms;">
+    <h2 class="text-xl font-bold text-coffee mb-4">🎚️ Health Bar Preview (Interactive)</h2>
+    <div class="bg-white rounded-2xl p-6 shadow-lg">
+      <div class="mb-4">
+        <label class="block text-coffee-light mb-2">Budget Remaining: <span id="pct-value">65%</span></label>
+        <input type="range" id="health-slider" min="0" max="100" value="65" class="w-full">
+      </div>
+      <div id="health-bar" class="h-6 rounded-full overflow-hidden zone-safe transition-all duration-500" style="width: 65%;">
+        <div class="h-full flex items-center justify-center text-white font-medium text-sm" id="zone-label">Safe Zone</div>
+      </div>
+      <p id="human-note" class="mt-4 text-center text-coffee-light italic min-h-[3rem]">"You're in a safe spot with your spending. Enjoy."</p>
+    </div>
+  </section>
+
+  <!-- Approval -->
+  <section class="reveal" style="transition-delay: 600ms;">
+    <div class="bg-white rounded-2xl p-6 shadow-lg text-center border-2 border-coffee-light/30">
+      <h2 class="text-xl font-bold text-coffee mb-2">Ready to Approve?</h2>
+      <p class="text-coffee-light mb-4">Review the plan above. If it looks good, say "looks good" and we'll move to <code class="bg-coffee-light/10 px-2 py-0.5 rounded">3-prd</code> (Product Requirements).</p>
+      <p class="text-sm text-coffee-light/70">Markdown stays canonical at <code class="bg-coffee-light/10 px-1.5 py-0.5 rounded">devpost/scope.md</code></p>
+    </div>
+  </section>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#4B3621', primaryTextColor: '#4B3621', primaryBorderColor: '#4B3621', lineColor: '#4B3621', secondaryColor: '#F5F0E8', tertiaryColor: '#F5F0E8' } });
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('zone-safe', 'text-white', 'bg-coffee-lighter/40', 'bg-danger/20'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        btn.classList.add('zone-safe', 'text-white');
+        document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
+        // Re-trigger reveals
+        document.querySelectorAll('#tab-' + btn.dataset.tab + ' .reveal').forEach((el, i) => {
+          el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
+          setTimeout(() => el.classList.add('visible'), i * 80);
+        });
+      });
+    });
+
+    // Health bar interaction
+    const slider = document.getElementById('health-slider');
+    const bar = document.getElementById('health-bar');
+    const label = document.getElementById('zone-label');
+    const note = document.getElementById('human-note');
+    const pct = document.getElementById('pct-value');
+
+    const notes = {
+      safe: ["You're in a safe spot with your spending. Enjoy.", "Breathing room looks good. Keep it steady.", "Nice buffer. No pressure."],
+      middle: ["You're drifting into the lower end. Worth a glance.", "Getting tighter. Maybe pause the non-essentials?", "Middle ground. Decide what matters."],
+      danger: ["You're in danger. I'd look at your spending right now.", "Red zone. Every rupee counts now.", "Deep in the danger zone. Time to stop."]
+    };
+
+    slider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value);
+      pct.textContent = val + '%';
+      bar.style.width = val + '%';
+      bar.classList.remove('zone-safe', 'zone-middle', 'zone-danger');
+      let zone, noteArr;
+      if (val > 60) { zone = 'Safe Zone'; noteArr = notes.safe; bar.classList.add('zone-safe'); }
+      else if (val >= 20) { zone = 'Middle Zone'; noteArr = notes.middle; bar.classList.add('zone-middle'); }
+      else { zone = 'Danger Zone'; noteArr = notes.danger; bar.classList.add('zone-danger'); }
+      label.textContent = zone;
+      note.textContent = noteArr[Math.floor(Math.random() * noteArr.length)];
+    });
+
+    // Scroll reveals
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
