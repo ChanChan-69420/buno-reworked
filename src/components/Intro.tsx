@@ -47,7 +47,7 @@ export default function Intro({ onContinue }: IntroProps) {
       <div className="intro-body" ref={textRef}>
         <h1 className="brand-title">Hello, this is Buno</h1>
         <p className="intro-premise">
-          Most budgeting apps show you exact remaining numbers — which backfires by giving you psychological "permission to spend."
+          Most budgeting apps show you exact remaining numbers, which backfires by giving you psychological "permission to spend."
         </p>
         <p className="intro-subtext">
           Buno replaces numeric micromanagement with <strong>qualitative spending zones</strong> and human nudges, keeping your pace calm and steady.
