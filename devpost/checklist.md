@@ -5,7 +5,7 @@ status: approved
 
 # Build Checklist
 
-Build mode: fast
+Build mode: learn
 
 ## Slices
 
@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Open http://localhost:5173 — you should see the budget, transactions, and a zone label. Change one hardcoded transaction amount and confirm the zone updates.
   Commit: `Scaffold Vite + React + TS with zone engine and basic display`
 
-- [x] **2. Intro + Budget Setup + localStorage Persistence**
+- [ ] **2. Intro + Budget Setup + localStorage Persistence**
   Becomes usable: First visit shows intro animation and premise, then budget setup. Budget saves to localStorage. Returning visits skip straight to the zone view.
   Why now: The first-visit flow is the entry point for the demo. Persistence is where the data model can be wrong — finding that out now is cheap.
   PRD ref: `prd.md > The Core Journey` (Steps 1-2), `prd.md > States and Boundaries` (First use / Returning user)
@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: Open the app fresh (clear localStorage in devtools). Watch the intro, set a budget, confirm you land on the zone view. Refresh — intro should not reappear.
   Commit: `Add intro, budget setup, and localStorage persistence`
 
-- [x] **3. Activity Tab + Pseudo-Bank Sandbox + Transaction Feed**
+- [ ] **3. Activity Tab + Pseudo-Bank Sandbox + Transaction Feed**
   Becomes usable: Two-tab layout. Activity tab shows a transaction feed from sandbox data with category icons, dates, and source badges. Empty state human note works.
   Why now: The feed is the data surface the cash entry will land on. Building it first means slice 4 only adds the form.
   PRD ref: `prd.md > Activity Tab`, `prd.md > Transaction Feed`, `prd.md > Pseudo Bank Sandbox`
@@ -39,7 +39,7 @@ Build mode: fast
   Learner check: Switch to Activity tab — you should see transactions with icons and dates. Switch back to Zone tab — health bar should reflect all transactions.
   Commit: `Add activity tab with sandbox transaction feed and category icons`
 
-- [x] **4. Manual Cash Entry + Zone Recalculation + Bounce Animation**
+- [ ] **4. Manual Cash Entry + Zone Recalculation + Bounce Animation**
   Becomes usable: User can log a cash expense. It validates, saves to localStorage, appears at the top of the feed with a GSAP bounce, and the zone recalculates immediately.
   Why now: This completes the core loop (check zone → log cash → see shift). The kernel is now fully interactive.
   PRD ref: `prd.md > Manual Cash Entry`, `prd.md > The Core Journey` (Step 4 core loop)

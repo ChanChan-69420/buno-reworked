@@ -1,0 +1,137 @@
+:root {
+  --vanilla:   #D7BDA6;  /* Background canvas, card highlights */
+  --almond:    #B7957F;  /* Borders, dividers, tertiary */
+  --mocca:     #84593D;  /* Inactive tabs, subheadings, secondary icons */
+  --caramel:   #AB7743;  /* Buttons, active indicators, interactive cues */
+  --coffee:    #6D3914;  /* Secondary headings, card outlines, badge borders */
+  --espresso:  #4C2B08;  /* Primary headings, body text, heavy sketch strokes */
+  
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--vanilla);
+  color: var(--espresso);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px;
+}
+
+.buno-container {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid var(--almond);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(76, 43, 8, 0.08);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: var(--espresso);
+  letter-spacing: 1px;
+}
+
+.brand-subtitle {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--mocca);
+  margin-top: 4px;
+}
+
+.zone-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px solid var(--almond);
+}
+
+.zone-label {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: var(--coffee);
+  margin-bottom: 6px;
+}
+
+.zone-pct {
+  font-size: 0.95rem;
+  color: var(--mocca);
+  margin-bottom: 16px;
+}
+
+.simple-bar-track {
+  width: 100%;
+  height: 16px;
+  background: var(--almond);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.simple-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.zone-safe .simple-bar-fill {
+  background: var(--coffee);
+}
+
+.zone-cautious .simple-bar-fill {
+  background: var(--caramel);
+}
+
+.zone-danger .simple-bar-fill,
+.zone-depleted .simple-bar-fill {
+  background: var(--espresso);
+}
+
+.human-note {
+  font-style: italic;
+  text-align: center;
+  color: var(--espresso);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.transactions-preview {
+  margin-top: 20px;
+}
+
+.transactions-heading {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--mocca);
+  margin-bottom: 12px;
+}
+
+.txn-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--almond);
+  font-size: 0.9rem;
+}
