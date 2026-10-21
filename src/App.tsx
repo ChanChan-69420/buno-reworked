@@ -68,6 +68,12 @@ export default function App() {
   const zoneCalc = calculateZone(currentBudget, transactions);
   const note = getRandomNote(zoneCalc.zone);
 
+  const handleReset = () => {
+    localStorage.removeItem('buno_budget');
+    setBudget(null);
+    setScreen('intro');
+  };
+
   return (
     <div className="buno-container">
       <header className="header">
@@ -88,6 +94,14 @@ export default function App() {
 
         <p className="human-note">"{note}"</p>
         <p className="budget-ref">Monthly budget: ₹{currentBudget.toLocaleString('en-IN')}</p>
+        
+        <button 
+          onClick={handleReset} 
+          className="reset-btn"
+          title="Reset onboarding and budget"
+        >
+          ↺ Reset / Restart Intro
+        </button>
       </section>
 
       <section className="transactions-preview">
