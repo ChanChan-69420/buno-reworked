@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buno — Technical Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --vanilla: #D7BDA6;
+      --almond: #B7957F;
+      --mocca: #84593D;
+      --caramel: #AB7743;
+      --coffee: #6D3914;
+      --espresso: #4C2B08;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--vanilla); color: var(--espresso); }
+    .reveal { opacity: 0; transform: translateY(16px); transition: all 0.35s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .mermaid { background: white; border-radius: 12px; padding: 1rem; }
+    .tab-btn { transition: all 0.2s; }
+    .tab-btn.active { background: var(--coffee); color: var(--vanilla); }
+    .comp-card { border-left: 4px solid var(--caramel); }
+    .comp-card:hover { background: rgba(171,119,67,0.08); }
+    .code-block { background: var(--espresso); color: var(--vanilla); border-radius: 8px; padding: 1rem; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.8rem; overflow-x: auto; }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4">
+  <div class="max-w-5xl mx-auto">
+    <header class="text-center mb-10 reveal">
+      <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-6 py-3 rounded-full mb-4 shadow-sm">
+        <span class="text-3xl">🐰</span>
+        <h1 class="text-2xl font-bold" style="color:var(--coffee)">Buno</h1>
+      </div>
+      <p class="text-lg" style="color:var(--mocca)">Technical Spec — Blueprint for Build</p>
+      <p class="text-sm mt-1" style="color:var(--almond)">Devpost Learn · Build With AI: Basics</p>
+    </header>
+
+    <!-- Stack Summary -->
+    <section class="mb-8 reveal" style="transition-delay:80ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">🧱 Stack (all free)</h2>
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-white rounded-xl p-4 shadow-sm"><strong>Vite</strong><br><span class="text-sm" style="color:var(--mocca)">Dev server + build</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm"><strong>React 18</strong><br><span class="text-sm" style="color:var(--mocca)">UI framework</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm"><strong>TypeScript 5</strong><br><span class="text-sm" style="color:var(--mocca)">Type safety</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm"><strong>GSAP (core)</strong><br><span class="text-sm" style="color:var(--mocca)">Free animations</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm"><strong>SVG + feTurbulence</strong><br><span class="text-sm" style="color:var(--mocca)">Sketch health bar</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm"><strong>localStorage</strong><br><span class="text-sm" style="color:var(--mocca)">Budget + cash entries</span></div>
+      </div>
+    </section>
+
+    <!-- Architecture Diagram -->
+    <section class="mb-8 reveal" style="transition-delay:160ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">🗺️ Architecture: Data Flow</h2>
+      <div class="mermaid">
+flowchart LR
+    subgraph Browser
+        UI[React UI<br/>Zone Tab + Activity Tab]
+        ZE[Zone Engine<br/>Pure calculation]
+        GS[GSAP<br/>Animations]
+    end
+    subgraph Storage
+        LS[(localStorage<br/>Budget + Cash Entries)]
+        SB[Sandbox Data<br/>Hardcoded JSON]
+    end
+    UI -->|reads budget| LS
+    UI -->|reads cash entries| LS
+    UI -->|loads| SB
+    UI -->|sends budget + txns| ZE
+    ZE -->|returns zone + pct + note| UI
+    UI -->|triggers| GS
+    GS -->|animates| UI
+    UI -->|saves cash entry| LS
+    
+    classDef ui fill:#D7BDA6,stroke:#6D3914,stroke-width:2px;
+    classDef lib fill:#AB7743,color:white,stroke-width:2px;
+    classDef store fill:#84593D,color:white,stroke-width:2px;
+    class UI ui;
+    class ZE,GS lib;
+    class LS,SB store;
+      </div>
+    </section>
+
+    <!-- Core Journey -->
+    <section class="mb-8 reveal" style="transition-delay:240ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">🚶 Core Journey Through the System</h2>
+      <div class="space-y-3">
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>1. First visit</strong> — Intro animation (bunny draw + "Hello, this is Buno") → Premise → Budget input → saved to localStorage → Zone tab</div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>2. Returning visit</strong> — localStorage checked → sandbox loads → Zone Engine calculates → health bar animates → human note displays</div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>3. Log cash expense</strong> — Activity tab → fill form → validate → save to localStorage → feed re-renders with bounce → zone recalculates → health bar morphs</div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>4. Danger exceeded</strong> — pct ≤ 0% → DANGER modal mounts → GSAP shake → "Budget is empty now" → dismiss → app continues</div>
+      </div>
+    </section>
+
+    <!-- Components -->
+    <section class="mb-8 reveal" style="transition-delay:320ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">🧩 Components</h2>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>App (Root)</strong><br><span class="text-sm" style="color:var(--mocca)">State, routing, localStorage checks</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Intro / Premise</strong><br><span class="text-sm" style="color:var(--mocca)">GSAP bunny entrance + premise copy</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Budget Setup</strong><br><span class="text-sm" style="color:var(--mocca)">Single input → localStorage</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Zone Tab</strong><br><span class="text-sm" style="color:var(--mocca)">Health bar, zone label, human note, budget display</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Activity Tab</strong><br><span class="text-sm" style="color:var(--mocca)">Feed, cash form, refresh button</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>DANGER Modal</strong><br><span class="text-sm" style="color:var(--mocca)">Full-screen overlay, GSAP shake</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Health Bar (SVG)</strong><br><span class="text-sm" style="color:var(--mocca)">feTurbulence filter + hatch fill + stroke animation</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Zone Engine</strong><br><span class="text-sm" style="color:var(--mocca)">Pure calculation: budget + txns → zone</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Pseudo-Bank Sandbox</strong><br><span class="text-sm" style="color:var(--mocca)">~30 hardcoded transactions, shuffle on refresh</span></div>
+        <div class="bg-white rounded-xl p-4 shadow-sm comp-card reveal"><strong>Category Icons</strong><br><span class="text-sm" style="color:var(--mocca)">6 inline SVGs: Food, Transport, Shopping, Bills, Entertainment, Other</span></div>
+      </div>
+    </section>
+
+    <!-- Zone Engine Code -->
+    <section class="mb-8 reveal" style="transition-delay:400ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">⚙️ Zone Engine Signature</h2>
+      <div class="code-block">function calculateZone(
+  budget: number,
+  transactions: Transaction[]
+): {
+  remaining: number;
+  pct: number;
+  zone: 'safe' | 'cautious' | 'danger' | 'depleted';
+  note: string;
+}</div>
+      <p class="text-sm mt-2" style="color:var(--mocca)">Pure function — no side effects. Easy to test and understand. This is the kernel.</p>
+    </section>
+
+    <!-- Palette -->
+    <section class="mb-8 reveal" style="transition-delay:480ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">🎨 Palette (exact hex)</h2>
+      <div class="grid grid-cols-6 gap-2">
+        <div class="rounded-lg p-3 text-center text-xs shadow-sm" style="background:#D7BDA6"><div class="font-bold">Vanilla</div><div>#D7BDA6</div></div>
+        <div class="rounded-lg p-3 text-center text-xs shadow-sm" style="background:#B7957F;color:white"><div class="font-bold">Almond</div><div>#B7957F</div></div>
+        <div class="rounded-lg p-3 text-center text-xs shadow-sm" style="background:#84593D;color:white"><div class="font-bold">Mocca</div><div>#84593D</div></div>
+        <div class="rounded-lg p-3 text-center text-xs shadow-sm" style="background:#AB7743;color:white"><div class="font-bold">Caramel</div><div>#AB7743</div></div>
+        <div class="rounded-lg p-3 text-center text-xs shadow-sm" style="background:#6D3914;color:white"><div class="font-bold">Coffee</div><div>#6D3914</div></div>
+        <div class="rounded-lg p-3 text-center text-xs shadow-sm" style="background:#4C2B08;color:white"><div class="font-bold">Espresso</div><div>#4C2B08</div></div>
+      </div>
+    </section>
+
+    <!-- File Structure -->
+    <section class="mb-8 reveal" style="transition-delay:560ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">📁 File Structure</h2>
+      <div class="code-block">buno/
+├── src/
+│   ├── components/
+│   │   ├── App.tsx              # Root: state, routing
+│   │   ├── Intro.tsx            # Entrance animation
+│   │   ├── BudgetSetup.tsx      # Budget input
+│   │   ├── ZoneTab.tsx          # Health bar + zone + note
+│   │   ├── ActivityTab.tsx      # Feed + cash form + refresh
+│   │   ├── DangerModal.tsx      # Full-screen DANGER
+│   │   ├── HealthBar.tsx        # SVG sketch bar
+│   │   ├── TransactionRow.tsx   # Feed row
+│   │   ├── CashEntryForm.tsx    # Manual entry
+│   │   └── icons/               # Bunny + 6 category SVGs
+│   ├── lib/
+│   │   ├── zoneEngine.ts        # Pure calculation
+│   │   ├── storage.ts           # localStorage helpers
+│   │   ├── notes.ts             # Human note arrays
+│   │   └── sandboxData.ts       # ~30 fake transactions
+│   ├── types.ts
+│   ├── App.css
+│   └── main.tsx
+├── devpost/
+├── index.html
+├── package.json
+└── vite.config.ts</div>
+    </section>
+
+    <!-- Decisions -->
+    <section class="mb-8 reveal" style="transition-delay:640ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">✅ Key Decisions</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full bg-white rounded-xl shadow-sm overflow-hidden text-sm">
+          <thead style="background:var(--coffee);color:var(--vanilla)">
+            <tr><th class="p-3 text-left">Decision</th><th class="p-3 text-left">Choice</th><th class="p-3 text-left">Tradeoff</th></tr>
+          </thead>
+          <tbody class="divide-y" style="border-color:var(--vanilla)">
+            <tr><td class="p-3 font-medium">Stack</td><td class="p-3">Vite + React + TS</td><td class="p-3">No SSR (not needed)</td></tr>
+            <tr><td class="p-3 font-medium">Health bar</td><td class="p-3">SVG + GSAP strokes</td><td class="p-3">More setup than paid DrawSVG</td></tr>
+            <tr><td class="p-3 font-medium">GSAP</td><td class="p-3">Free core only</td><td class="p-3">Manual stroke animation</td></tr>
+            <tr><td class="p-3 font-medium">Danger</td><td class="p-3">Full-screen modal</td><td class="p-3">More jarring (dismissable)</td></tr>
+            <tr><td class="p-3 font-medium">Storage</td><td class="p-3">localStorage</td><td class="p-3">Single device only</td></tr>
+            <tr><td class="p-3 font-medium">Bank data</td><td class="p-3">Hardcoded sandbox</td><td class="p-3">No real sync</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Learning Moment -->
+    <section class="mb-8 reveal" style="transition-delay:720ms">
+      <div class="bg-white rounded-2xl p-6 shadow-lg border-l-8" style="border-color:var(--caramel)">
+        <h2 class="text-xl font-bold mb-2" style="color:var(--coffee)">💡 Learning Moment: React + GSAP</h2>
+        <p style="color:var(--mocca)">React re-renders the DOM <em>declaratively</em> ("show this now"). GSAP animates <em>imperatively</em> ("move from here to here over 0.5s"). These coexist but require careful wiring — typically <code class="bg-[var(--vanilla)] px-1 rounded">useEffect</code> + <code class="bg-[var(--vanilla)] px-1 rounded">gsap.to()</code> on a ref. This is the core technical learning moment of the build. We'll explore it with a concrete example during <code class="bg-[var(--vanilla)] px-1 rounded">5-build</code>.</p>
+      </div>
+    </section>
+
+    <!-- How to Run -->
+    <section class="mb-8 reveal" style="transition-delay:800ms">
+      <h2 class="text-xl font-bold mb-4" style="color:var(--coffee)">▶️ How to Run</h2>
+      <div class="code-block">npm install
+npm run dev        # → http://localhost:5173
+npm run build      # → dist/ (static files)</div>
+    </section>
+
+    <!-- Approval -->
+    <section class="reveal" style="transition-delay:880ms">
+      <div class="bg-white rounded-2xl p-6 shadow-lg text-center border-2" style="border-color:var(--almond)">
+        <h2 class="text-xl font-bold mb-2" style="color:var(--coffee)">Ready to Approve?</h2>
+        <p class="mb-4" style="color:var(--mocca)">Review the spec. If it looks good, say "looks good" and we'll move to <code class="px-2 py-0.5 rounded" style="background:var(--vanilla)">5-build</code>.</p>
+        <p class="text-sm" style="color:var(--almond)">Markdown canonical at <code class="px-1.5 py-0.5 rounded" style="background:var(--vanilla)">devpost/spec.md</code></p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#D7BDA6', primaryTextColor: '#4C2B08', primaryBorderColor: '#6D3914', lineColor: '#6D3914', secondaryColor: '#AB7743', tertiaryColor: '#B7957F' } });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
