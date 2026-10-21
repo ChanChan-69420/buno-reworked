@@ -53,13 +53,42 @@ Single-page app with two tabs. No auth, no multi-user, no settings.
 
 ## Look and Feel
 
-- **Palette**: Coffee brown theme throughout — dark brown (`#4B3621`) for primary lines/text, medium brown (`#6F4E37`) for secondary, beige/cream (`#F5F0E8`) for background and light lines. **No zone colors** (no green/yellow/red).
-- **Health bar**: Sketch/line-drawing aesthetic — variable line density, stroke weight, or dash pattern to convey Safe (dense, steady) → Cautious (sparser, tentative) → Danger (fragmented, erratic). GSAP morph/draw animations on zone change.
-- **Typography**: Minimal, clean, legible — single font family, hierarchy via weight/size. No decorative fonts.
-- **Bunny logo**: Subtle, used in entrance animation only.
-- **Icons**: Simple line icons for categories (food, transport, shopping, etc.) — same coffee palette.
-- **Feel**: Calm, high-quality, intentional. Not shiny, not gamified. "Personalized human's touch."
-- **GSAP uses**: Entrance (bunny → app), health bar zone transitions, cash entry bounce-in, Danger overlay animation.
+### Design & Visual References
+
+#### 1. Color Palette (Coffee Theme)
+![Coffee Color Palette](assets/color-palette.png)
+
+The exact 6-tone coffee palette defined for Buno:
+- **Vanilla** (`#D7BDA6`): Soft cream for primary background canvas, card highlights, and light accents.
+- **Almond** (`#B7957F`): Neutral warm sand for borders, subtle dividers, and tertiary elements.
+- **Mocca** (`#84593D`): Medium warm brown for inactive tabs, subheadings, and secondary icons.
+- **Caramel** (`#AB7743`): Rich amber-brown accent for buttons, active indicator, and interactive cues.
+- **Coffee** (`#6D3914`): Robust coffee brown for secondary headings, card outlines, and badge borders.
+- **Espresso** (`#4C2B08`): Deepest dark roast for primary headings, body text, and heavy sketch strokes.
+
+*Constraint*: Strictly **no zone colors** (no green/yellow/red). All states, including Danger, convey status through sketch density, line weight, and typography contrast within this palette.
+
+#### 2. Sketch-Style Health Bar
+![Sketch Health Bar Reference](assets/sketch-health-bar.png)
+
+- Hand-drawn chalk / sketch aesthetic: outlined rectangular container (`BUDGET | [ ... ]`) filled with textured diagonal hatch lines.
+- Safe zone (>60%): Dense, rhythmic diagonal hatching filling the upper portion.
+- Cautious zone (20%–60%): Sparser, lighter hatching with visible breathing room.
+- Danger zone (<20%): Fragmented, erratic, or thinning scratch lines.
+- Depleted (≤0%): Empty bar with persistent danger animation / overdraw.
+- Transitions animated dynamically using GSAP morph / stroke drawing.
+
+#### 3. Typography Reference
+![Typography Reference](assets/typography-reference.png)
+
+- **Display / Brand Headline**: Elegant serif font with high contrast and personality (inspired by "Adios" reference).
+- **Labels / Navigation / Metadata**: Clean, tracked uppercase sans-serif (inspired by "FORUM" reference) for crisp legibility across numbers, dates, and category tags.
+
+#### 4. Additional Style Notes
+- **Bunny logo**: Subtle sketch-line bunny emblem, used in entrance animation and header.
+- **Icons**: Hand-drawn / minimal single-stroke line icons for categories (food, transport, shopping, etc.) matching the Coffee/Espresso tones.
+- **Feel**: Calm, human, intentional, analog craft. Not gamified, not corporate fintech.
+- **GSAP Micro-interactions**: Smooth entrance reveal, health bar hatching morphs on zone transitions, cash entry bounce-in, and visceral Danger shake/overlay.
 
 ## Features and Behavior
 
