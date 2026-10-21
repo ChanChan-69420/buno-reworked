@@ -19,7 +19,7 @@ Build mode: learn
   Learner check: Open http://localhost:5173 — you should see the budget, transactions, and a zone label. Change one hardcoded transaction amount and confirm the zone updates.
   Commit: `Scaffold Vite + React + TS with zone engine and basic display`
 
-- [ ] **2. Intro + Budget Setup + localStorage Persistence**
+- [x] **2. Intro + Budget Setup + localStorage Persistence**
   Becomes usable: First visit shows intro animation and premise, then budget setup. Budget saves to localStorage. Returning visits skip straight to the zone view.
   Why now: The first-visit flow is the entry point for the demo. Persistence is where the data model can be wrong — finding that out now is cheap.
   PRD ref: `prd.md > The Core Journey` (Steps 1-2), `prd.md > States and Boundaries` (First use / Returning user)

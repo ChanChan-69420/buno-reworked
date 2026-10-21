@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import type { Transaction } from './types';
 import { calculateZone } from './lib/zoneEngine';
 import { getRandomNote } from './lib/notes';
-
-const INITIAL_BUDGET = 25000;
+import { getStoredBudget, setStoredBudget } from './lib/storage';
+import Intro from './components/Intro';
+import BudgetSetup from './components/BudgetSetup';
 
 const INITIAL_TRANSACTIONS: Transaction[] = [
   { id: '1', description: 'Grocery run', amount: 3200, date: '2026-10-18', category: 'food', source: 'bank' },
@@ -14,11 +15,57 @@ const INITIAL_TRANSACTIONS: Transaction[] = [
   { id: '5', description: 'Bookstore purchase', amount: 650, date: '2026-10-21', category: 'shopping', source: 'cash' },
 ];
 
+type AppScreen = 'loading' | 'intro' | 'setup' | 'main';
+
 export default function App() {
-  const [budget] = useState<number>(INITIAL_BUDGET);
+  const [budget, setBudget] = useState<number | null>(null);
+  const [screen, setScreen] = useState<AppScreen>('loading');
   const [transactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS);
 
-  const zoneCalc = calculateZone(budget, transactions);
+  // Check localStorage on initial mount
+  useEffect(() => {
+    const saved = getStoredBudget();
+    if (saved) {
+      setBudget(saved);
+      setScreen('main');
+    } else {
+      setScreen('intro');
+    }
+  }, []);
+
+  const handleStartSetup = () => {
+    setScreen('setup');
+  };
+
+  const handleBudgetSaved = (newBudget: number) => {
+    setStoredBudget(newBudget);
+    setBudget(newBudget);
+    setScreen('main');
+  };
+
+  if (screen === 'loading') {
+    return null;
+  }
+
+  if (screen === 'intro') {
+    return (
+      <div className="buno-container">
+        <Intro onContinue={handleStartSetup} />
+      </div>
+    );
+  }
+
+  if (screen === 'setup') {
+    return (
+      <div className="buno-container">
+        <BudgetSetup onBudgetSet={handleBudgetSaved} />
+      </div>
+    );
+  }
+
+  // Main Zone view
+  const currentBudget = budget ?? 25000;
+  const zoneCalc = calculateZone(currentBudget, transactions);
   const note = getRandomNote(zoneCalc.zone);
 
   return (
@@ -40,6 +87,7 @@ export default function App() {
         </div>
 
         <p className="human-note">"{note}"</p>
+        <p className="budget-ref">Monthly budget: ₹{currentBudget.toLocaleString('en-IN')}</p>
       </section>
 
       <section className="transactions-preview">
