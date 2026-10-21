@@ -16,18 +16,22 @@
   padding: 0;
 }
 
+html, body {
+  width: 100%;
+  min-height: 100vh;
+}
+
 body {
   background-color: var(--vanilla);
   color: var(--espresso);
   font-family: var(--font-sans);
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
 }
 
-/* Base Mobile-First Layout: fills screen on phones with clean padding */
+/* Base Mobile Layout */
 .buno-container {
   width: 100%;
   min-height: 100vh;
@@ -36,23 +40,28 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: auto;
   transition: all 0.3s ease;
 }
 
-/* Laptops / Desktops / Windows layout: scales up into an elegant spacious canvas */
+/* Laptops / Desktops / Windows layout: centered card in viewport */
 @media (min-width: 768px) {
   body {
     padding: 32px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .buno-container {
     min-height: auto;
-    max-width: 640px;
+    max-width: 580px;
     border: 2px solid var(--almond);
     border-radius: 24px;
     padding: 40px 36px;
     box-shadow: 0 16px 40px rgba(76, 43, 8, 0.09);
     backdrop-filter: blur(10px);
+    margin: auto;
   }
 
   .brand-title {
