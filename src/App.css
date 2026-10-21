@@ -145,22 +145,15 @@ body {
   flex-direction: column;
 }
 
-.intro-header-row {
+.intro-hero-group {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-@media (min-width: 600px) {
-  .intro-header-row {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    text-align: left;
-  }
+  gap: 16px;
+  margin-bottom: 24px;
+  min-height: 100px;
+  will-change: transform;
 }
 
 .intro-bunny-box {
@@ -177,6 +170,7 @@ body {
 .intro-title-box .brand-title {
   font-size: 2.2rem;
   margin-bottom: 0;
+  white-space: nowrap;
 }
 
 .intro-desc-box {

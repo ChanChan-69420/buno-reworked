@@ -7,11 +7,12 @@ interface IntroProps {
 }
 
 export default function Intro({ onContinue }: IntroProps) {
-  // Step 1: Meet Buno (Bunny pops, slides left, title up, description reveals, Next button in bottom-right)
-  // Step 2: Premise / Set Budget explanation
+  // Step 1: Choreographed reveal of Buno & premise
+  // Step 2: Set monthly budget prompt
   const [step, setStep] = useState<1 | 2>(1);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const heroGroupRef = useRef<HTMLDivElement>(null);
   const bunnyRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
@@ -26,47 +27,53 @@ export default function Intro({ onContinue }: IntroProps) {
       const ctx = gsap.context(() => {
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-        // Initial setup
-        gsap.set(bunnyRef.current, { scale: 0.6, opacity: 0, x: 0, y: 10 });
-        gsap.set(titleRef.current, { opacity: 0, y: 20 });
-        gsap.set(descRef.current, { opacity: 0, y: 15 });
-        gsap.set(nextBtnRef.current, { opacity: 0, scale: 0.85, x: 10 });
+        // Initial states
+        gsap.set(bunnyRef.current, { scale: 0.5, opacity: 0, x: 0 });
+        gsap.set(titleRef.current, { opacity: 0, x: -15 });
+        gsap.set(heroGroupRef.current, { y: 25 });
+        gsap.set(descRef.current, { opacity: 0, y: 25 });
+        gsap.set(nextBtnRef.current, { opacity: 0, scale: 0.8, x: 10 });
 
         // Sequence:
         // 1. Bunny appears in center
         tl.to(bunnyRef.current, {
           scale: 1,
           opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'back.out(1.7)',
+          duration: 0.7,
+          ease: 'back.out(1.8)',
         })
-          // 2. Bunny slides to the left
+          // 2. Bunny slides to the right
           .to(bunnyRef.current, {
-            x: -24,
-            duration: 0.6,
+            x: 20,
+            duration: 0.65,
             ease: 'power2.inOut',
-          }, '+=0.2')
-          // 3. "Hello, this is Buno" comes up
+          }, '+=0.3')
+          // 3. "Hello, this is Buno" text appears beside it
           .to(titleRef.current, {
             opacity: 1,
+            x: 0,
+            duration: 0.6,
+          }, '-=0.35')
+          // 4. After a few seconds pause, the hero group (bunny + title) floats up
+          .to(heroGroupRef.current, {
             y: 0,
-            duration: 0.5,
-          }, '-=0.3')
-          // 4. Description reveals below
+            duration: 0.8,
+            ease: 'power2.inOut',
+          }, '+=1.0')
+          // 5. Description comes in below
           .to(descRef.current, {
             opacity: 1,
             y: 0,
-            duration: 0.5,
-          }, '-=0.1')
-          // 5. Down-right "Next →" button pops in
+            duration: 0.65,
+          }, '-=0.3')
+          // 6. Next button pops in bottom-right
           .to(nextBtnRef.current, {
             opacity: 1,
             scale: 1,
             x: 0,
-            duration: 0.4,
-            ease: 'back.out(1.5)',
-          }, '-=0.1');
+            duration: 0.45,
+            ease: 'back.out(1.6)',
+          }, '-=0.15');
       }, containerRef);
 
       return () => ctx.revert();
@@ -82,7 +89,6 @@ export default function Intro({ onContinue }: IntroProps) {
         },
       });
 
-      // Animate out Step 1 smoothly
       tl.to([descRef.current, titleRef.current, nextBtnRef.current], {
         opacity: 0,
         y: -15,
@@ -126,14 +132,15 @@ export default function Intro({ onContinue }: IntroProps) {
     <div className="intro-card" ref={containerRef}>
       {step === 1 ? (
         <div className="intro-step1-wrapper">
-          <div className="intro-header-row">
-            <div className="intro-bunny-box" ref={bunnyRef}>
-              <BunnyLogo size={80} />
-            </div>
+          {/* Hero group: Title on the left, Bunny on the right */}
+          <div className="intro-hero-group" ref={heroGroupRef}>
             <div className="intro-title-box">
               <h1 className="brand-title" ref={titleRef}>
                 Hello, this is Buno
               </h1>
+            </div>
+            <div className="intro-bunny-box" ref={bunnyRef}>
+              <BunnyLogo size={85} />
             </div>
           </div>
 
