@@ -6,7 +6,7 @@ export function SiteHeader({ zone }: { zone: ZoneId }) {
   const tone = ZONE_TONE[zone]
 
   return (
-    <header className="mt-5 h-[68px] min-h-[68px] shrink-0 w-full max-w-[1000px] rounded-full border border-white/50 bg-card/55 px-4 shadow-lg shadow-black/10 backdrop-blur-md sm:px-6">
+    <header className="sanctuary-navbar mt-5 h-[68px] min-h-[68px] shrink-0 rounded-full border border-white/50 bg-card/55 px-4 shadow-lg shadow-black/10 backdrop-blur-md sm:px-6">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <span

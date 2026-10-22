@@ -20,7 +20,7 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
   const HeadroomIcon = zone === 'safe' ? CircleCheck : CircleAlert
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm text-muted-foreground">Current Zone Status</p>
@@ -43,9 +43,9 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
 
       <section
         aria-label="Chalk runway horizon"
-        className="rounded-2xl bg-panel p-5 text-panel-foreground shadow-md sm:p-6"
+        className="rounded-2xl bg-panel p-4 text-panel-foreground shadow-md sm:p-4"
       >
-        <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="mb-2 flex items-center justify-between gap-3">
           <h3 className="text-sm font-medium uppercase tracking-wider text-panel-foreground/90">
             Chalk Runway Horizon
           </h3>
@@ -57,7 +57,7 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
 
         <RunwayBar pctSpent={pctSpent} />
 
-        <ul className="mt-4 flex items-center justify-between gap-2 border-t border-panel-foreground/10 pt-3 text-xs sm:text-sm">
+        <ul className="mt-2 flex items-center justify-between gap-2 border-t border-panel-foreground/10 pt-3 text-xs sm:text-sm">
           {LEGEND.map((item) => (
             <li
               key={item.id}
@@ -75,15 +75,15 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
         </ul>
       </section>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <article className="rounded-2xl bg-tile p-5 shadow-sm shadow-black/5">
+      <div className="grid grid-cols-2 gap-2">
+        <article className="rounded-2xl bg-tile p-2.5 shadow-sm shadow-black/5">
           <h4 className="text-xs font-medium uppercase tracking-wider text-coffee-label">
             Burn Tempo
           </h4>
           <p className="mt-2 text-lg font-medium">{copy.tempoTitle}</p>
           <p className="mt-1 text-sm text-muted-foreground">{copy.tempoBody}</p>
         </article>
-        <article className="rounded-2xl bg-tile p-5 shadow-sm shadow-black/5">
+        <article className="rounded-2xl bg-tile p-2.5 shadow-sm shadow-black/5">
           <h4 className="text-xs font-medium uppercase tracking-wider text-coffee-label">
             Buffer Cushion
           </h4>

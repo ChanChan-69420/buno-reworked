@@ -50,12 +50,12 @@ export function Sanctuary() {
   }
 
   return (
-    <div className="relative z-10 flex min-h-dvh max-h-dvh flex-col items-center overflow-hidden px-4">
+    <div className="sanctuary-page relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col items-center overflow-hidden">
       <SiteHeader zone={result.zone} />
 
-      <main className="sanctuary-main flex min-h-0 w-full flex-1 items-center justify-center py-3 sm:py-4">
-        <article className="sanctuary-card card-sheen w-full max-w-[560px] overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
-          <div className="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <main className="sanctuary-main flex min-h-0 w-full flex-1 items-center justify-center">
+        <article className="sanctuary-card card-sheen overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
+          <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
                 Mindful Flow
@@ -101,7 +101,7 @@ export function Sanctuary() {
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={`tab-${activeTab}`}
-            className="space-y-4 p-6 sm:p-6"
+            className="space-y-4 p-6 py-4"
           >
             {activeTab === 'budget' ? (
               <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
