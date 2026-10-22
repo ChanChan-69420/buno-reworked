@@ -88,52 +88,8 @@
   width: min(700px, calc(100% - 40px));
 }
 
-.sanctuary-main {
-  min-height: 0;
-  padding: 12px 0;
-}
-
-.sanctuary-card {
-  width: min(620px, calc(100vw - 24px));
-}
-
-.sanctuary-hero {
-  min-height: calc(100dvh - 130px);
-}
-
-.insights-stack {
-  width: min(620px, calc(100vw - 24px));
-}
-
 @media (min-width: 640px) and (max-height: 650px) {
   .sanctuary-navbar {
     width: min(585px, calc(100% - 40px));
-  }
-
-  .insights-stack {
-    width: calc(min(620px, calc(100vw - 24px)) * 0.82);
-  }
-
-  .sanctuary-card {
-    transform: scale(0.82);
-    transform-origin: center;
-    margin-block: -3rem;
-  }
-}
-
-@media (max-width: 639px) {
-  .sanctuary-main {
-    padding: 8px 0;
-  }
-
-  .insights-stack {
-    width: calc((100vw - 24px) * 0.84);
-  }
-
-  .sanctuary-card {
-    padding: 0;
-    transform: scale(0.84);
-    transform-origin: center;
-    margin-block: -3rem;
   }
 }

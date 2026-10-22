@@ -102,6 +102,23 @@ export function monthComparison(transactions: Transaction[], today: Date) {
   }
 }
 
+export type TrendVerdict = 'unknown' | 'lighter' | 'similar' | 'heavier'
+
+// Compares cumulative spend on the same day of both months, without exposing amounts.
+export function trendVsLastMonth(
+  current: MonthSeries,
+  previous: MonthSeries,
+): TrendVerdict {
+  if (!previous.hasData) return 'unknown'
+  const day = Math.min(current.points.length, previous.points.length)
+  const previousAtDay = day > 0 ? previous.points[day - 1].cumulative : 0
+  if (previousAtDay === 0) return current.total > 0 ? 'heavier' : 'similar'
+  const ratio = current.total / previousAtDay
+  if (ratio < 0.9) return 'lighter'
+  if (ratio > 1.1) return 'heavier'
+  return 'similar'
+}
+
 export type InsightCategory =
   | 'housing'
   | 'food'

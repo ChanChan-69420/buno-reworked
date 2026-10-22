@@ -8,6 +8,46 @@ const LEGEND: { id: ZoneId; dot: string; text: string }[] = [
   { id: 'critical', dot: 'bg-critical', text: 'text-critical' },
 ]
 
+const PACE_LABEL: Record<ZoneId, string> = {
+  safe: 'Steady pace',
+  cautious: 'Picking up speed',
+  critical: 'Running fast',
+}
+
+const BUFFER_LABEL: Record<ZoneId, string> = {
+  safe: 'Comfortable buffer',
+  cautious: 'Limited buffer',
+  critical: 'Almost no buffer',
+}
+
+const clampBar = (value: number) => Math.min(100, Math.max(4, value))
+
+function Indicator({
+  title,
+  status,
+  fill,
+  barClass,
+  statusClass,
+}: {
+  title: string
+  status: string
+  fill: number
+  barClass: string
+  statusClass: string
+}) {
+  return (
+    <li>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-sm font-medium">{title}</span>
+        <span className={`text-xs font-medium ${statusClass}`}>{status}</span>
+      </div>
+      <div aria-hidden="true" className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-border">
+        <div className={`h-full rounded-full ${barClass}`} style={{ width: `${fill}%` }} />
+      </div>
+    </li>
+  )
+}
+
 interface BudgetRangePanelProps {
   zone: ZoneId
   pctSpent: number
@@ -17,7 +57,7 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
   const copy = ZONE_COPY[zone]
   const tone = ZONE_TONE[zone]
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-1 flex-col justify-between gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="flex items-center gap-3 font-serif text-2xl font-medium sm:text-[1.7rem]">
@@ -63,13 +103,37 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
         </ul>
       </section>
 
-      <p className={`px-2 py-3 text-center text-sm leading-6 ${tone.text}`}>
+      <p className={`px-2 text-center text-sm leading-6 ${tone.text}`}>
         {zone === 'safe'
           ? "You’re a safe spender! Keep up the good work."
           : zone === 'cautious'
             ? "You’re entering territory worth being cautious about. Keep an eye on your spending."
             : "Your budget is at risk. Stay alert and spend carefully."}
       </p>
+
+      <ul aria-label="Budget indicators" className="flex flex-col gap-3 rounded-2xl bg-tile p-4">
+        <Indicator
+          title="Budget"
+          status="Set for the month"
+          fill={100}
+          barClass="bg-primary"
+          statusClass="text-muted-foreground"
+        />
+        <Indicator
+          title="Spending pace"
+          status={PACE_LABEL[zone]}
+          fill={clampBar(pctSpent)}
+          barClass={tone.dot}
+          statusClass={tone.text}
+        />
+        <Indicator
+          title="Available buffer"
+          status={BUFFER_LABEL[zone]}
+          fill={clampBar(100 - pctSpent)}
+          barClass={tone.dot}
+          statusClass={tone.text}
+        />
+      </ul>
     </div>
   )
 }

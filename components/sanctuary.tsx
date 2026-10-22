@@ -17,6 +17,7 @@ export function Sanctuary() {
   const [activeTab, setActiveTab] = useState<TabId>('budget')
   const panelRef = useRef<HTMLDivElement>(null)
   const hasMounted = useRef(false)
+  const isBudget = activeTab === 'budget'
 
   const result = useMemo(
     () => calculateZone(MONTHLY_BUDGET, SANDBOX_TRANSACTIONS),
@@ -63,36 +64,44 @@ export function Sanctuary() {
         onTabKeyDown={handleTabKeyDown}
       />
 
-      <main className="flex w-full flex-1 flex-col items-center">
-      <div className="sanctuary-main sanctuary-hero flex w-full items-center justify-center">
-        <article className="sanctuary-card card-sheen overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
-          <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-            <div>
+      <main className="flex w-full flex-1 items-center justify-center px-3 py-3 lg:px-6">
+        <div
+          className={`grid w-full gap-4 ${
+            isBudget ? 'max-w-[1180px] lg:grid-cols-[46fr_54fr]' : 'max-w-[620px]'
+          }`}
+        >
+          <article
+            className={`card-sheen flex flex-col overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30 ${
+              isBudget ? 'lg:row-span-2' : ''
+            }`}
+          >
+            <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
               <h1 className="font-serif text-2xl font-medium text-balance sm:text-3xl">
                 Monthly Budget
               </h1>
             </div>
-          </div>
 
-          <div
-            ref={panelRef}
-            role="tabpanel"
-            id={`panel-${activeTab}`}
-            aria-labelledby={`tab-${activeTab}`}
-            className="space-y-4 p-6 py-4"
-          >
-            {activeTab === 'budget' ? (
-              <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
-            ) : (
-              <TransactionsPanel transactions={SANDBOX_TRANSACTIONS} />
-            )}
-          </div>
-        </article>
-      </div>
+            <div
+              ref={panelRef}
+              role="tabpanel"
+              id={`panel-${activeTab}`}
+              aria-labelledby={`tab-${activeTab}`}
+              className="flex flex-1 flex-col p-6 py-4"
+            >
+              {isBudget ? (
+                <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
+              ) : (
+                <TransactionsPanel transactions={SANDBOX_TRANSACTIONS} />
+              )}
+            </div>
+          </article>
 
-        <div className="insights-stack flex flex-col gap-4 pb-6">
-          <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
-          <CategorySpendingPanel total={categories.total} items={categories.items} />
+          {isBudget && (
+            <>
+              <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
+              <CategorySpendingPanel total={categories.total} items={categories.items} />
+            </>
+          )}
         </div>
       </main>
 
