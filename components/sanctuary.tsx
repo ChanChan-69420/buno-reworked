@@ -7,6 +7,9 @@ import { BudgetRangePanel } from '@/components/budget-range-panel'
 import { TransactionsPanel } from '@/components/transactions-panel'
 import { MONTHLY_BUDGET, SANDBOX_TRANSACTIONS } from '@/lib/sandbox-data'
 import { calculateZone } from '@/lib/zone-engine'
+import { MonthComparisonPanel } from '@/components/month-comparison-panel'
+import { CategorySpendingPanel } from '@/components/category-spending-panel'
+import { categoryBreakdown, monthComparison } from '@/lib/spending-insights'
 
 type TabId = 'budget' | 'transactions'
 
@@ -19,6 +22,14 @@ export function Sanctuary() {
     () => calculateZone(MONTHLY_BUDGET, SANDBOX_TRANSACTIONS),
     [],
   )
+
+  const { comparison, categories } = useMemo(() => {
+    const today = new Date()
+    return {
+      comparison: monthComparison(SANDBOX_TRANSACTIONS, today),
+      categories: categoryBreakdown(SANDBOX_TRANSACTIONS, today),
+    }
+  }, [])
 
   useEffect(() => {
     if (!hasMounted.current) {
@@ -45,14 +56,15 @@ export function Sanctuary() {
   }
 
   return (
-    <div className="sanctuary-page relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col items-center overflow-hidden">
+    <div className="sanctuary-page relative z-10 flex min-h-[100dvh] flex-col items-center">
       <SiteHeader
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onTabKeyDown={handleTabKeyDown}
       />
 
-      <main className="sanctuary-main flex min-h-0 w-full flex-1 items-center justify-center">
+      <main className="flex w-full flex-1 flex-col items-center">
+      <div className="sanctuary-main sanctuary-hero flex w-full items-center justify-center">
         <article className="sanctuary-card card-sheen overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
           <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
@@ -76,6 +88,12 @@ export function Sanctuary() {
             )}
           </div>
         </article>
+      </div>
+
+        <div className="insights-stack flex flex-col gap-4 pb-6">
+          <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
+          <CategorySpendingPanel total={categories.total} items={categories.items} />
+        </div>
       </main>
 
       <footer className="shrink-0 pb-3 text-center text-sm text-card/70">
