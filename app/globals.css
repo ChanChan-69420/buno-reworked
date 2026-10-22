@@ -86,9 +86,9 @@
   }
 
   .sanctuary-card {
-    transform: scale(0.7);
+    transform: scale(0.78);
     transform-origin: center;
-    margin-block: -5rem;
+    margin-block: -4rem;
   }
 }
 
@@ -98,6 +98,7 @@
   }
 
   .sanctuary-card {
-    max-width: 100%;
+    width: calc(100% - 24px);
+    max-width: none;
   }
 }
