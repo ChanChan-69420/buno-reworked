@@ -50,11 +50,11 @@ export function Sanctuary() {
   }
 
   return (
-    <div className="relative z-10 flex min-h-dvh flex-col items-center px-4 py-3 sm:py-4">
+    <div className="relative z-10 flex min-h-dvh max-h-dvh flex-col items-center overflow-hidden px-4">
       <SiteHeader zone={result.zone} />
 
-      <main className="sanctuary-main flex w-full flex-1 items-center justify-center py-4 sm:py-6">
-        <article className="sanctuary-card card-sheen w-full max-w-2xl overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
+      <main className="sanctuary-main flex min-h-0 w-full flex-1 items-center justify-center py-3 sm:py-4">
+        <article className="sanctuary-card card-sheen w-full max-w-[560px] overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
           <div className="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
@@ -101,7 +101,7 @@ export function Sanctuary() {
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={`tab-${activeTab}`}
-            className="px-6 py-5 sm:px-8 sm:py-6"
+            className="space-y-4 p-6 sm:p-6"
           >
             {activeTab === 'budget' ? (
               <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
@@ -112,7 +112,7 @@ export function Sanctuary() {
         </article>
       </main>
 
-      <footer className="text-center text-sm text-card/70">
+      <footer className="shrink-0 pb-3 text-center text-sm text-card/70">
         Buno <span aria-hidden="true">&bull;</span> Mindful broad-horizon
         sanctuary
       </footer>
