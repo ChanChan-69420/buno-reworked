@@ -50,7 +50,7 @@ export function Sanctuary() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center px-4 py-6 sm:py-10">
+    <div className="relative z-10 flex min-h-dvh flex-col items-center px-4 py-6 sm:py-10">
       <SiteHeader zone={result.zone} />
 
       <main className="flex w-full flex-1 items-center justify-center py-10 sm:py-16">

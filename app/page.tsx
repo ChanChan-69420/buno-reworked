@@ -4,7 +4,7 @@ import { Sanctuary } from '@/components/sanctuary'
 export default function HomePage() {
   return (
     <>
-      <div className="fixed inset-0 -z-10 bg-background">
+      <div className="fixed inset-0 z-0 bg-background">
         <Image
           src="/images/forest-sanctuary.png"
           alt=""
