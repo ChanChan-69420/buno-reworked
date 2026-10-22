@@ -98,7 +98,9 @@ export function Sanctuary() {
 
           {isBudget && (
             <>
-              <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
+              <div className="lg:row-span-2">
+                <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
+              </div>
               <CategorySpendingPanel total={categories.total} items={categories.items} />
             </>
           )}
