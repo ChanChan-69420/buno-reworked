@@ -12,7 +12,7 @@ export interface ZoneCopy {
 
 export const ZONE_COPY: Record<ZoneId, ZoneCopy> = {
   safe: {
-    label: 'Safe Haven',
+    label: 'Safe',
     mood: 'Calm & Gentle',
     headroom: 'Ample Headroom',
     tempoTitle: 'Gentle & Steady',
@@ -21,7 +21,7 @@ export const ZONE_COPY: Record<ZoneId, ZoneCopy> = {
     bufferBody: 'Spacious room for living',
   },
   cautious: {
-    label: 'Cautious Zone',
+    label: 'Cautious',
     mood: 'Mindful & Measured',
     headroom: 'Narrowing Headroom',
     tempoTitle: 'Brisk & Watchful',
@@ -30,7 +30,7 @@ export const ZONE_COPY: Record<ZoneId, ZoneCopy> = {
     bufferBody: 'Room is getting tighter',
   },
   critical: {
-    label: 'Critical Reserve',
+    label: 'Danger',
     mood: 'Urgent & Tense',
     headroom: 'Little Headroom',
     tempoTitle: 'Fast & Heavy',

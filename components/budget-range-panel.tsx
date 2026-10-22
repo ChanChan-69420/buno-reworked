@@ -1,4 +1,3 @@
-import { CircleAlert, CircleCheck } from 'lucide-react'
 import { RunwayBar } from '@/components/runway-bar'
 import { ZONE_COPY, ZONE_TONE } from '@/lib/zone-copy'
 import type { ZoneId } from '@/lib/types'
@@ -17,20 +16,17 @@ interface BudgetRangePanelProps {
 export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
   const copy = ZONE_COPY[zone]
   const tone = ZONE_TONE[zone]
-  const HeadroomIcon = zone === 'safe' ? CircleCheck : CircleAlert
-
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-muted-foreground">Current Zone Status</p>
-          <p className="mt-1 flex items-center gap-3 font-serif text-2xl font-medium sm:text-[1.7rem]">
+          <p className="flex items-center gap-3 font-serif text-2xl font-medium sm:text-[1.7rem]">
             <span
               aria-hidden="true"
               className={`size-3 shrink-0 rounded-full ${tone.dot}`}
             />
             <span>
-              Currently in:{' '}
+              Currently:{' '}
               <span className={tone.text}>{copy.label}</span>
             </span>
           </p>
@@ -38,17 +34,13 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
       </div>
 
       <section
-        aria-label="Chalk runway horizon"
+        aria-label="Budget bar"
         className="rounded-2xl bg-panel p-4 text-panel-foreground shadow-md sm:p-4"
       >
         <div className="mb-2 flex items-center justify-between gap-3">
           <h3 className="text-sm font-medium uppercase tracking-wider text-panel-foreground/90">
-            Chalk Runway Horizon
+            Budget Bar
           </h3>
-          <p className="flex items-center gap-2 text-sm">
-            <HeadroomIcon aria-hidden="true" className="size-4" />
-            {copy.headroom}
-          </p>
         </div>
 
         <RunwayBar pctSpent={pctSpent} />
