@@ -79,8 +79,7 @@ export function Sanctuary() {
       </main>
 
       <footer className="shrink-0 pb-3 text-center text-sm text-card/70">
-        Buno <span aria-hidden="true">&bull;</span> Mindful broad-horizon
-        sanctuary
+        Buno <span aria-hidden="true">&bull;</span> By Vachan and Yava
       </footer>
     </div>
   )

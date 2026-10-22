@@ -63,26 +63,13 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
         </ul>
       </section>
 
-      <div className="grid grid-cols-2 gap-2">
-        <article className="rounded-2xl bg-tile p-2.5 shadow-sm shadow-black/5">
-          <h4 className="text-xs font-medium uppercase tracking-wider text-coffee-label">
-            Burn Tempo
-          </h4>
-          <p className="mt-2 text-lg font-medium">{copy.tempoTitle}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{copy.tempoBody}</p>
-        </article>
-        <article className="rounded-2xl bg-tile p-2.5 shadow-sm shadow-black/5">
-          <h4 className="text-xs font-medium uppercase tracking-wider text-coffee-label">
-            Buffer Cushion
-          </h4>
-          <p className={`mt-2 text-lg font-medium ${tone.text}`}>
-            {copy.bufferTitle}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {copy.bufferBody}
-          </p>
-        </article>
-      </div>
+      <p className={`px-2 py-3 text-center text-sm leading-6 ${tone.text}`}>
+        {zone === 'safe'
+          ? "You’re a safe spender! Keep up the good work."
+          : zone === 'cautious'
+            ? "You’re entering territory worth being cautious about. Keep an eye on your spending."
+            : "Your budget is at risk. Stay alert and spend carefully."}
+      </p>
     </div>
   )
 }
