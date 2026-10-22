@@ -8,12 +8,7 @@ import { TransactionsPanel } from '@/components/transactions-panel'
 import { MONTHLY_BUDGET, SANDBOX_TRANSACTIONS } from '@/lib/sandbox-data'
 import { calculateZone } from '@/lib/zone-engine'
 
-const TABS = [
-  { id: 'budget', label: 'Budget Range' },
-  { id: 'transactions', label: 'Transactions' },
-] as const
-
-type TabId = (typeof TABS)[number]['id']
+type TabId = 'budget' | 'transactions'
 
 export function Sanctuary() {
   const [activeTab, setActiveTab] = useState<TabId>('budget')
@@ -51,7 +46,11 @@ export function Sanctuary() {
 
   return (
     <div className="sanctuary-page relative z-10 flex h-[100dvh] max-h-[100dvh] flex-col items-center overflow-hidden">
-      <SiteHeader zone={result.zone} />
+      <SiteHeader
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onTabKeyDown={handleTabKeyDown}
+      />
 
       <main className="sanctuary-main flex min-h-0 w-full flex-1 items-center justify-center">
         <article className="sanctuary-card card-sheen overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
@@ -65,35 +64,6 @@ export function Sanctuary() {
               </h1>
             </div>
 
-            <div
-              role="tablist"
-              aria-label="Sanctuary views"
-              className="flex w-fit items-center gap-1 rounded-full border border-white bg-primary/10 p-1"
-            >
-              {TABS.map((tab) => {
-                const selected = tab.id === activeTab
-                return (
-                  <button
-                    key={tab.id}
-                    id={`tab-${tab.id}`}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    aria-controls={`panel-${tab.id}`}
-                    tabIndex={selected ? 0 : -1}
-                    onClick={() => setActiveTab(tab.id)}
-                    onKeyDown={handleTabKeyDown}
-                    className={`rounded-full px-3 py-1.5 text-xs transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${
-                      selected
-                        ? 'bg-tile font-medium text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                )
-              })}
-            </div>
           </div>
 
           <div
