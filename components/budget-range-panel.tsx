@@ -1,4 +1,4 @@
-import { CircleAlert, CircleCheck, Sprout } from 'lucide-react'
+import { CircleAlert, CircleCheck } from 'lucide-react'
 import { RunwayBar } from '@/components/runway-bar'
 import { ZONE_COPY, ZONE_TONE } from '@/lib/zone-copy'
 import type { ZoneId } from '@/lib/types'
@@ -35,10 +35,6 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
             </span>
           </p>
         </div>
-        <p className="flex items-center gap-2 rounded-full border border-border bg-primary/10 px-4 py-2 text-sm font-medium">
-          <Sprout aria-hidden="true" className="size-4 text-muted-foreground" />
-          {copy.mood}
-        </p>
       </div>
 
       <section

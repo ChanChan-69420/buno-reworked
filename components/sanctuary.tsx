@@ -56,14 +56,10 @@ export function Sanctuary() {
         <article className="sanctuary-card card-sheen overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
           <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-                Mindful Flow
-              </p>
-              <h1 className="mt-1 font-serif text-2xl font-medium text-balance sm:text-3xl">
-                Pacing Sanctuary
+              <h1 className="font-serif text-2xl font-medium text-balance sm:text-3xl">
+                Monthly Budget
               </h1>
             </div>
-
           </div>
 
           <div
