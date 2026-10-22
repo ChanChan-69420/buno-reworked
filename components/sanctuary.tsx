@@ -50,17 +50,17 @@ export function Sanctuary() {
   }
 
   return (
-    <div className="relative z-10 flex min-h-dvh flex-col items-center px-4 py-6 sm:py-10">
+    <div className="relative z-10 flex min-h-dvh flex-col items-center px-4 py-3 sm:py-4">
       <SiteHeader zone={result.zone} />
 
-      <main className="flex w-full flex-1 items-center justify-center py-10 sm:py-16">
-        <article className="card-sheen w-full max-w-3xl overflow-hidden rounded-[2rem] bg-card text-card-foreground shadow-2xl shadow-black/30">
-          <div className="flex flex-col gap-5 border-b border-border px-6 py-7 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+      <main className="sanctuary-main flex w-full flex-1 items-center justify-center py-4 sm:py-6">
+        <article className="sanctuary-card card-sheen w-full max-w-2xl overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
+          <div className="flex flex-col gap-3 border-b border-border px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
                 Mindful Flow
               </p>
-              <h1 className="mt-1 font-serif text-3xl font-medium text-balance sm:text-4xl">
+              <h1 className="mt-1 font-serif text-2xl font-medium text-balance sm:text-3xl">
                 Pacing Sanctuary
               </h1>
             </div>
@@ -83,7 +83,7 @@ export function Sanctuary() {
                     tabIndex={selected ? 0 : -1}
                     onClick={() => setActiveTab(tab.id)}
                     onKeyDown={handleTabKeyDown}
-                    className={`rounded-full px-4 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${
+                    className={`rounded-full px-3 py-1.5 text-xs transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${
                       selected
                         ? 'bg-tile font-medium text-foreground shadow-sm'
                         : 'text-muted-foreground hover:text-foreground'
@@ -101,7 +101,7 @@ export function Sanctuary() {
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={`tab-${activeTab}`}
-            className="px-6 py-7 sm:px-10 sm:py-8"
+            className="px-6 py-5 sm:px-8 sm:py-6"
           >
             {activeTab === 'budget' ? (
               <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />

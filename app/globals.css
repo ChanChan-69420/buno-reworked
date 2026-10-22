@@ -79,3 +79,16 @@
     rgba(249, 242, 236, 0) 55%
   );
 }
+
+@media (min-width: 640px) and (max-height: 650px) {
+  .sanctuary-main {
+    min-height: 0;
+    padding-block: 0.25rem;
+  }
+
+  .sanctuary-card {
+    transform: scale(0.62);
+    transform-origin: center;
+    margin-block: -7rem;
+  }
+}
