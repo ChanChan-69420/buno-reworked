@@ -1,3 +1,7 @@
+'use client'
+
+import { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
 import { trendVsLastMonth, type MonthSeries, type TrendVerdict } from '@/lib/spending-insights'
 
 const WIDTH = 560
@@ -70,6 +74,55 @@ export function MonthComparisonPanel({
   current: MonthSeries
   previous: MonthSeries
 }) {
+  const svgRef = useRef<SVGSVGElement>(null)
+
+  // The panel mounts each time the Insights tab opens, so a mount-only effect replays the draw once per activation.
+  useLayoutEffect(() => {
+    const svg = svgRef.current
+    if (!svg || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const series = ['last-month', 'this-month'].flatMap((key) => {
+      const line = svg.querySelector<SVGPathElement>(`[data-line="${key}"]`)
+      const clip = svg.querySelector<SVGRectElement>(`#${key}-clip rect`)
+      return line && clip ? [{ line, clip, length: line.getTotalLength() }] : []
+    })
+    const dot = svg.querySelector<SVGCircleElement>('[data-dot]')
+
+    const reset = ({ line, clip }: (typeof series)[number]) => {
+      line.style.removeProperty('stroke-dasharray')
+      line.style.removeProperty('stroke-dashoffset')
+      clip.setAttribute('width', String(WIDTH))
+    }
+
+    const ctx = gsap.context(() => {
+      series.forEach((item) => {
+        const { line, clip, length } = item
+        line.style.strokeDasharray = `${length}`
+        line.style.strokeDashoffset = `${length}`
+        clip.setAttribute('width', '0')
+
+        // The area clip follows the drawn tip so the fill rises along the same trajectory as the line.
+        const progress = { value: 0 }
+        gsap.to(progress, {
+          value: 1,
+          duration: 1.1,
+          ease: 'power2.inOut',
+          onUpdate: () => {
+            line.style.strokeDashoffset = `${length * (1 - progress.value)}`
+            clip.setAttribute('width', String(line.getPointAtLength(length * progress.value).x))
+          },
+          onComplete: () => reset(item),
+        })
+      })
+      if (dot) gsap.fromTo(dot, { opacity: 0 }, { opacity: 1, duration: 0.2, delay: 0.9, ease: 'none' })
+    }, svg)
+
+    return () => {
+      ctx.revert()
+      series.forEach(reset)
+    }
+  }, [])
+
   const totalDays = Math.max(current.totalDays, previous.hasData ? previous.totalDays : 0)
   const dataMax = Math.max(current.total, previous.hasData ? previous.total : 0, 1)
   // Both lines share one scale; headroom keeps the highest point off the top edge.
@@ -134,6 +187,7 @@ export function MonthComparisonPanel({
       {current.hasData || previous.hasData ? (
         <div className="flex flex-1 items-center">
           <svg
+            ref={svgRef}
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
             role="img"
             aria-label={summary}
@@ -148,6 +202,12 @@ export function MonthComparisonPanel({
                 <stop offset="0%" stopColor={LAST_MONTH_COLOR} stopOpacity="0.2" />
                 <stop offset="100%" stopColor={LAST_MONTH_COLOR} stopOpacity="0.02" />
               </linearGradient>
+              <clipPath id="this-month-clip">
+                <rect x="0" y="0" width={WIDTH} height={HEIGHT} />
+              </clipPath>
+              <clipPath id="last-month-clip">
+                <rect x="0" y="0" width={WIDTH} height={HEIGHT} />
+              </clipPath>
             </defs>
 
             {gridLines.map((fraction) => (
@@ -195,8 +255,9 @@ export function MonthComparisonPanel({
 
             {previousPoints.length > 1 && (
               <>
-                <path d={areaPath(previousPoints)} fill="url(#last-month-fill)" />
+                <path d={areaPath(previousPoints)} fill="url(#last-month-fill)" clipPath="url(#last-month-clip)" />
                 <path
+                  data-line="last-month"
                   d={monotonePath(previousPoints)}
                   fill="none"
                   stroke={LAST_MONTH_COLOR}
@@ -210,8 +271,9 @@ export function MonthComparisonPanel({
 
             {currentPoints.length > 1 && (
               <>
-                <path d={areaPath(currentPoints)} fill="url(#this-month-fill)" />
+                <path d={areaPath(currentPoints)} fill="url(#this-month-fill)" clipPath="url(#this-month-clip)" />
                 <path
+                  data-line="this-month"
                   d={monotonePath(currentPoints)}
                   fill="none"
                   stroke={THIS_MONTH_COLOR}
@@ -223,7 +285,7 @@ export function MonthComparisonPanel({
             )}
 
             {lastPoint && (
-              <circle cx={lastPoint.x} cy={lastPoint.y} r="4" fill="#f9f2ec" stroke={THIS_MONTH_COLOR} strokeWidth="2" />
+              <circle data-dot cx={lastPoint.x} cy={lastPoint.y} r="4" fill="#f9f2ec" stroke={THIS_MONTH_COLOR} strokeWidth="2" />
             )}
           </svg>
         </div>

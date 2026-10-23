@@ -1,3 +1,7 @@
+'use client'
+
+import { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
 import {
   Car,
   Clapperboard,
@@ -38,6 +42,28 @@ export function CategorySpendingPanel({
   items: { category: InsightCategory; amount: number; percent: number }[]
 }) {
   const maxPercent = Math.max(...items.map((item) => item.percent), 1)
+  const listRef = useRef<HTMLUListElement>(null)
+
+  // The panel mounts each time the Insights tab opens, so a mount-only effect replays the fill once per activation.
+  useLayoutEffect(() => {
+    const list = listRef.current
+    if (!list || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '[data-bar]',
+        { width: '0%' },
+        {
+          width: (_index, bar: HTMLElement) => `${bar.dataset.fill}%`,
+          duration: 0.7,
+          ease: 'power2.out',
+          stagger: 0.08,
+        },
+      )
+    }, list)
+
+    return () => ctx.revert()
+  }, [])
 
   return (
     <section
@@ -54,7 +80,7 @@ export function CategorySpendingPanel({
       </div>
 
       {total > 0 ? (
-        <ul className="mt-3 grid grid-cols-3 gap-x-4 gap-y-5">
+        <ul ref={listRef} className="mt-3 grid grid-cols-3 gap-x-4 gap-y-5">
           {items.map((item) => {
             const meta = CATEGORY_META[item.category]
             const Icon = meta.icon
@@ -76,6 +102,8 @@ export function CategorySpendingPanel({
                   className="h-1.5 w-full overflow-hidden rounded-full bg-border"
                 >
                   <span
+                    data-bar
+                    data-fill={fill}
                     className="block h-full rounded-full"
                     style={{ width: `${fill}%`, backgroundColor: meta.color }}
                   />
