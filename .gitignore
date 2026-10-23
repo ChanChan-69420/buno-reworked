@@ -5,3 +5,8 @@
 .env
 .env.*
 !.env.example
+# Next.js
+/node_modules
+/.next
+next-env.d.ts
+*.tsbuildinfo

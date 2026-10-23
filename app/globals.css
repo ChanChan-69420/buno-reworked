@@ -1,0 +1,95 @@
+@import 'tailwindcss';
+
+:root {
+  --background: #4c2b08;
+  --foreground: #3b2209;
+  --card: #f9f2ec;
+  --card-foreground: #3b2209;
+  --tile: #fdf9f5;
+  --muted-foreground: #84593d;
+  --border: #eadccd;
+  --primary: #ab7743;
+  --panel: #4a2a0b;
+  --panel-foreground: #ead9c5;
+  --panel-muted: #b99c82;
+  --safe: #2f5b3c;
+  --safe-bright: #62d6a0;
+  --caution: #e8b33a;
+  --caution-deep: #8a6212;
+  --critical: #f0708a;
+  --critical-deep: #a3304a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-tile: var(--tile);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-coffee-label: #6d3914;
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+  --color-panel-muted: var(--panel-muted);
+  --color-safe: var(--safe);
+  --color-safe-bright: var(--safe-bright);
+  --color-caution: var(--caution);
+  --color-caution-deep: var(--caution-deep);
+  --color-critical: var(--critical);
+  --color-critical-deep: var(--critical-deep);
+
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.runway-track {
+  background-color: #2f1a06;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.07) 0 2px,
+    transparent 2px 10px
+  );
+}
+
+.runway-fill {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 5px,
+      rgba(47, 26, 6, 0.6) 5px 9px
+    ),
+    linear-gradient(90deg, #a9cfa6, #d79a57);
+}
+
+.card-sheen {
+  background-image: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(249, 242, 236, 0) 55%
+  );
+}
+
+.sanctuary-page {
+  min-height: 100dvh;
+}
+
+.sanctuary-navbar {
+  width: min(700px, calc(100% - 40px));
+}
+
+@media (min-width: 640px) and (max-height: 650px) {
+  .sanctuary-navbar {
+    width: min(585px, calc(100% - 40px));
+  }
+}
