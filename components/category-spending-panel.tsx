@@ -54,7 +54,7 @@ export function CategorySpendingPanel({
       </div>
 
       {total > 0 ? (
-        <ul className="mt-3 grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-6">
+        <ul className="mt-3 grid grid-cols-3 gap-x-4 gap-y-5">
           {items.map((item) => {
             const meta = CATEGORY_META[item.category]
             const Icon = meta.icon

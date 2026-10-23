@@ -11,13 +11,16 @@ import { MonthComparisonPanel } from '@/components/month-comparison-panel'
 import { CategorySpendingPanel } from '@/components/category-spending-panel'
 import { categoryBreakdown, monthComparison } from '@/lib/spending-insights'
 
-type TabId = 'budget' | 'transactions'
+type TabId = 'budget' | 'insights' | 'transactions'
+
+const TAB_ORDER: TabId[] = ['budget', 'insights', 'transactions']
 
 export function Sanctuary() {
   const [activeTab, setActiveTab] = useState<TabId>('budget')
   const panelRef = useRef<HTMLDivElement>(null)
   const hasMounted = useRef(false)
   const isBudget = activeTab === 'budget'
+  const isInsights = activeTab === 'insights'
 
   const result = useMemo(
     () => calculateZone(MONTHLY_BUDGET, SANDBOX_TRANSACTIONS),
@@ -51,7 +54,9 @@ export function Sanctuary() {
   function handleTabKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
     event.preventDefault()
-    const next = activeTab === 'budget' ? 'transactions' : 'budget'
+    const step = event.key === 'ArrowRight' ? 1 : -1
+    const index = TAB_ORDER.indexOf(activeTab)
+    const next = TAB_ORDER[(index + step + TAB_ORDER.length) % TAB_ORDER.length]
     setActiveTab(next)
     document.getElementById(`tab-${next}`)?.focus()
   }
@@ -65,46 +70,42 @@ export function Sanctuary() {
       />
 
       <main className="flex w-full flex-1 items-center justify-center px-3 py-3 lg:px-6">
-        <div
-          className={`grid w-full gap-4 ${
-            isBudget ? 'max-w-[1180px] lg:grid-cols-[46fr_54fr]' : 'max-w-[620px]'
-          }`}
-        >
-          <article
-            className={`card-sheen flex flex-col overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30 ${
-              isBudget ? 'lg:row-span-2' : ''
-            }`}
+        {isInsights ? (
+          <div
+            ref={panelRef}
+            role="tabpanel"
+            id="panel-insights"
+            aria-labelledby="tab-insights"
+            className="grid w-full max-w-[1180px] gap-4 lg:grid-cols-2"
           >
-            <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-              <h1 className="font-serif text-2xl font-medium text-balance sm:text-3xl">
-                Monthly Budget
-              </h1>
-            </div>
-
-            <div
-              ref={panelRef}
-              role="tabpanel"
-              id={`panel-${activeTab}`}
-              aria-labelledby={`tab-${activeTab}`}
-              className="flex flex-1 flex-col p-6 py-4"
-            >
-              {isBudget ? (
-                <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
-              ) : (
-                <TransactionsPanel transactions={SANDBOX_TRANSACTIONS} />
-              )}
-            </div>
-          </article>
-
-          {isBudget && (
-            <>
-              <div className="lg:row-span-2">
-                <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
+            <MonthComparisonPanel current={comparison.current} previous={comparison.previous} />
+            <CategorySpendingPanel total={categories.total} items={categories.items} />
+          </div>
+        ) : (
+          <div className="grid w-full max-w-[620px] gap-4">
+            <article className="card-sheen flex flex-col overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
+              <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+                <h1 className="font-serif text-2xl font-medium text-balance sm:text-3xl">
+                  Monthly Budget
+                </h1>
               </div>
-              <CategorySpendingPanel total={categories.total} items={categories.items} />
-            </>
-          )}
-        </div>
+
+              <div
+                ref={panelRef}
+                role="tabpanel"
+                id={`panel-${activeTab}`}
+                aria-labelledby={`tab-${activeTab}`}
+                className="flex flex-1 flex-col p-6 py-4"
+              >
+                {isBudget ? (
+                  <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
+                ) : (
+                  <TransactionsPanel transactions={SANDBOX_TRANSACTIONS} />
+                )}
+              </div>
+            </article>
+          </div>
+        )}
       </main>
 
       <footer className="shrink-0 pb-3 text-center text-sm text-card/70">
