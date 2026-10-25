@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import gsap from 'gsap'
-import { Plus, X } from 'lucide-react'
+import { Plus, Trash2, X } from 'lucide-react'
 import { CategoryIcon } from '@/components/category-icon'
 import type { Category, Transaction, TransactionSource } from '@/lib/types'
 
@@ -55,6 +55,7 @@ export function TransactionsPanel({
   // Form state
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
+  const [isRefund, setIsRefund] = useState(false)
   const [category, setCategory] = useState<Category>('food')
   const [date, setDate] = useState('')
   const [source, setSource] = useState<TransactionSource>('cash')
@@ -143,6 +144,7 @@ export function TransactionsPanel({
   function handleOpenModal() {
     setDescription('')
     setAmount('')
+    setIsRefund(false)
     setCategory('food')
     setDate(getLocalDatetimeNow())
     setSource('cash')
@@ -183,6 +185,17 @@ export function TransactionsPanel({
     })
   }
 
+  function handleDeleteManualTransaction(id: string) {
+    const updated = manualTransactions.filter((t) => t.id !== id)
+    setManualTransactions(updated)
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+      window.dispatchEvent(new CustomEvent('buno_transactions_changed'))
+    } catch (err) {
+      console.error('Failed to update localStorage:', err)
+    }
+  }
+
   function validate() {
     const nextErrors: {
       description?: string
@@ -194,7 +207,7 @@ export function TransactionsPanel({
       nextErrors.description = 'Transaction name or description is required.'
     }
 
-    const parsedAmount = parseFloat(amount)
+    const parsedAmount = Math.abs(parseFloat(amount))
     if (!amount.trim() || isNaN(parsedAmount) || parsedAmount <= 0) {
       nextErrors.amount = 'Please enter a valid amount greater than ₹0.'
     }
@@ -220,14 +233,15 @@ export function TransactionsPanel({
 
     setIsSubmitting(true)
 
-    const numAmount = Math.round(parseFloat(amount) * 100) / 100
+    const rawAbsAmount = Math.round(Math.abs(parseFloat(amount)) * 100) / 100
+    const finalAmount = isRefund ? -rawAbsAmount : rawAbsAmount
     const isoDate = new Date(date).toISOString()
 
     const newTx: Transaction = {
       id: `manual-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       description: description.trim(),
       category,
-      amount: numAmount,
+      amount: finalAmount,
       date: isoDate,
       source,
     }
@@ -237,6 +251,7 @@ export function TransactionsPanel({
 
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+      window.dispatchEvent(new CustomEvent('buno_transactions_changed'))
     } catch (err) {
       console.error('Failed to save manual transaction to localStorage:', err)
     }
@@ -277,36 +292,61 @@ export function TransactionsPanel({
           aria-label="Transactions, scroll horizontally to browse"
           className="-mx-6 flex snap-x snap-proximity gap-3 overflow-x-auto overscroll-x-contain px-6 pb-3 [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] scroll-px-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
         >
-          {sorted.map((t) => (
-            <li
-              key={t.id}
-              className="flex min-h-40 w-48 shrink-0 snap-start flex-col justify-between gap-3 rounded-2xl bg-tile p-4 shadow-sm shadow-black/5"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <CategoryIcon category={t.category} />
-                <span
-                  className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium ${
-                    t.source === 'bank'
-                      ? 'border-border bg-card text-muted-foreground'
-                      : 'border-primary/40 bg-primary/10 text-coffee-label'
+          {sorted.map((t) => {
+            const isManual = t.id.startsWith('manual-')
+            const isNegative = t.amount < 0
+            return (
+              <li
+                key={t.id}
+                className="relative flex min-h-40 w-48 shrink-0 snap-start flex-col justify-between gap-3 rounded-2xl bg-tile p-4 shadow-sm shadow-black/5"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <CategoryIcon category={t.category} />
+                  <div className="flex items-center gap-1">
+                    <span
+                      className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium ${
+                        isNegative
+                          ? 'border-safe/30 bg-safe/10 text-safe'
+                          : t.source === 'bank'
+                            ? 'border-border bg-card text-muted-foreground'
+                            : 'border-primary/40 bg-primary/10 text-coffee-label'
+                      }`}
+                    >
+                      {isNegative ? 'Refund' : t.source === 'bank' ? 'Bank' : 'Cash'}
+                    </span>
+                    {isManual && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteManualTransaction(t.id)}
+                        className="rounded-full p-1 text-muted-foreground hover:bg-critical/15 hover:text-critical"
+                        aria-label={`Delete ${t.description}`}
+                        title="Delete entry"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <p className="line-clamp-2 min-h-10 break-words font-medium leading-5">
+                    {t.description}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {dateFormatter.format(new Date(t.date))}
+                  </p>
+                </div>
+                <p
+                  className={`text-lg font-medium tabular-nums ${
+                    isNegative ? 'text-safe font-semibold' : ''
                   }`}
                 >
-                  {t.source === 'bank' ? 'Bank' : 'Cash'}
-                </span>
-              </div>
-              <div className="min-w-0">
-                <p className="line-clamp-2 min-h-10 break-words font-medium leading-5">
-                  {t.description}
+                  {isNegative
+                    ? `+ ${amountFormatter.format(Math.abs(t.amount))}`
+                    : amountFormatter.format(t.amount)}
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {dateFormatter.format(new Date(t.date))}
-                </p>
-              </div>
-              <p className="text-lg font-medium tabular-nums">
-                {amountFormatter.format(t.amount)}
-              </p>
-            </li>
-          ))}
+              </li>
+            )
+          })}
         </ul>
       )}
 
@@ -343,6 +383,37 @@ export function TransactionsPanel({
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3.5">
+              {/* Transaction Type: Expense vs Refund */}
+              <div>
+                <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-coffee-label">
+                  Transaction Type
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsRefund(false)}
+                    className={`flex-1 rounded-xl border py-2 text-xs font-medium transition sm:text-sm ${
+                      !isRefund
+                        ? 'border-primary/60 bg-primary/20 font-semibold text-coffee-label shadow-xs'
+                        : 'border-border bg-tile/70 text-muted-foreground hover:bg-tile'
+                    }`}
+                  >
+                    Expense
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsRefund(true)}
+                    className={`flex-1 rounded-xl border py-2 text-xs font-medium transition sm:text-sm ${
+                      isRefund
+                        ? 'border-safe/60 bg-safe/20 font-semibold text-safe shadow-xs'
+                        : 'border-border bg-tile/70 text-muted-foreground hover:bg-tile'
+                    }`}
+                  >
+                    Refund / Credit
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label
                   htmlFor="tx-desc"
@@ -353,7 +424,7 @@ export function TransactionsPanel({
                 <input
                   id="tx-desc"
                   type="text"
-                  placeholder="e.g. Chai, Groceries, Rent"
+                  placeholder={isRefund ? 'e.g. Returned shoes, Store refund' : 'e.g. Chai, Groceries, Rent'}
                   value={description}
                   onChange={(e) => {
                     setDescription(e.target.value)
@@ -384,7 +455,7 @@ export function TransactionsPanel({
                 </label>
                 <div className="relative">
                   <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-sm text-muted-foreground">
-                    ₹
+                    {isRefund ? '+ ₹' : '₹'}
                   </span>
                   <input
                     id="tx-amount"
@@ -399,7 +470,9 @@ export function TransactionsPanel({
                         setErrors((prev) => ({ ...prev, amount: undefined }))
                       }
                     }}
-                    className={`w-full rounded-xl border bg-tile py-2 pl-8 pr-3.5 text-sm tabular-nums text-foreground focus:outline-none focus:ring-2 ${
+                    className={`w-full rounded-xl border bg-tile py-2 ${
+                      isRefund ? 'pl-11' : 'pl-8'
+                    } pr-3.5 text-sm tabular-nums text-foreground focus:outline-none focus:ring-2 ${
                       errors.amount
                         ? 'border-critical focus:ring-critical/30'
                         : 'border-border focus:border-primary focus:ring-primary/20'
@@ -509,7 +582,7 @@ export function TransactionsPanel({
                   disabled={isSubmitting}
                   className="rounded-full bg-primary px-5 py-2 text-xs font-medium text-white shadow-xs transition hover:bg-primary/90 active:scale-95 disabled:opacity-50 sm:text-sm"
                 >
-                  {isSubmitting ? 'Saving...' : 'Save Transaction'}
+                  {isSubmitting ? 'Saving...' : isRefund ? 'Save Refund' : 'Save Transaction'}
                 </button>
               </div>
             </form>

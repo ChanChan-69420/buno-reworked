@@ -1,21 +1,54 @@
 import { RunwayBar } from '@/components/runway-bar'
 import { ZONE_COPY, ZONE_TONE } from '@/lib/zone-copy'
-import type { ZoneId } from '@/lib/types'
+import type { BudgetState, ZoneId } from '@/lib/types'
 
+// Reordered from left to right as Danger → Cautious → Safe
+// Left represents depleted funds (0%), right represents full budget (100%)
 const LEGEND: { id: ZoneId; dot: string; text: string }[] = [
-  { id: 'safe', dot: 'bg-safe-bright', text: 'text-safe-bright' },
-  { id: 'cautious', dot: 'bg-caution', text: 'text-caution' },
   { id: 'critical', dot: 'bg-critical', text: 'text-critical' },
+  { id: 'cautious', dot: 'bg-caution', text: 'text-caution' },
+  { id: 'safe', dot: 'bg-safe-bright', text: 'text-safe-bright' },
 ]
 
-interface BudgetRangePanelProps {
+export interface BudgetRangePanelProps {
   zone: ZoneId
-  pctSpent: number
+  pctSpent?: number
+  remainingPct?: number
+  remaining?: number
+  spent?: number
+  budget?: number
+  state?: BudgetState
+  overspent?: number
 }
 
-export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
-  const copy = ZONE_COPY[zone]
+export function BudgetRangePanel({
+  zone,
+  pctSpent,
+  remainingPct,
+  remaining,
+  spent,
+  budget,
+  state,
+  overspent = 0,
+}: BudgetRangePanelProps) {
+  // If remainingPct not supplied directly, infer from pctSpent
+  const effectiveRemainingPct =
+    typeof remainingPct === 'number'
+      ? remainingPct
+      : typeof pctSpent === 'number'
+        ? Math.max(0, 100 - pctSpent)
+        : 100
+
+  // Resolve status label
+  const statusLabel =
+    state === 'overspent'
+      ? 'OVER BUDGET'
+      : state === 'depleted'
+        ? 'DEPLETED'
+        : ZONE_COPY[zone].label
+
   const tone = ZONE_TONE[zone]
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -27,7 +60,7 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
             />
             <span>
               Currently:{' '}
-              <span className={tone.text}>{copy.label}</span>
+              <span className={tone.text}>{statusLabel}</span>
             </span>
           </p>
         </div>
@@ -43,14 +76,20 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
           </h3>
         </div>
 
-        <RunwayBar pctSpent={pctSpent} />
+        <RunwayBar
+          remainingPct={effectiveRemainingPct}
+          zone={zone}
+          state={state}
+          overspentAmount={overspent}
+          pctSpent={pctSpent}
+        />
 
-        <ul className="mt-2 flex items-center justify-between gap-2 border-t border-panel-foreground/10 pt-3 text-xs sm:text-sm">
+        <ul className="mt-2.5 flex items-center justify-between gap-2 border-t border-panel-foreground/10 pt-3 text-xs sm:text-sm">
           {LEGEND.map((item) => (
             <li
               key={item.id}
               className={`flex items-center gap-2 ${item.text} ${
-                item.id === zone ? 'font-medium' : 'opacity-70'
+                item.id === zone ? 'font-medium opacity-100' : 'opacity-65'
               }`}
             >
               <span
@@ -64,13 +103,16 @@ export function BudgetRangePanel({ zone, pctSpent }: BudgetRangePanelProps) {
       </section>
 
       <p className={`px-2 text-center text-sm leading-6 ${tone.text}`}>
-        {zone === 'safe'
-          ? "You’re a safe spender! Keep up the good work."
-          : zone === 'cautious'
-            ? "You’re entering territory worth being cautious about. Keep an eye on your spending."
-            : "Your budget is at risk. Stay alert and spend carefully."}
+        {state === 'overspent'
+          ? `You have exceeded your monthly budget by ₹${Math.round(overspent).toLocaleString('en-IN')}. Pause non-essential spending.`
+          : state === 'depleted'
+            ? 'Your monthly budget has run out. 100% of your budget has been spent.'
+            : zone === 'safe'
+              ? 'You’re a safe spender! Keep up the good work.'
+              : zone === 'cautious'
+                ? 'Your remaining budget is narrowing. Keep an eye on your spending.'
+                : 'Your budget is at risk. Stay alert and spend carefully.'}
       </p>
-
     </div>
   )
 }

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node --test --experimental-strip-types lib/__tests__/*.test.ts"
   },
   "dependencies": {
     "gsap": "^3.12.5",

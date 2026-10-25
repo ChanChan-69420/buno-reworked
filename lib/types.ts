@@ -20,10 +20,18 @@ export interface Transaction {
 
 export type ZoneId = 'safe' | 'cautious' | 'critical'
 
+export type BudgetState = 'safe' | 'cautious' | 'danger' | 'depleted' | 'overspent'
+
 export interface ZoneResult {
+  budget: number
   spent: number
   remaining: number
+  overspent: number
   pctSpent: number
   pctRemaining: number
+  fillPct: number
   zone: ZoneId
+  state: BudgetState
+  isDepleted: boolean
+  isOverspent: boolean
 }

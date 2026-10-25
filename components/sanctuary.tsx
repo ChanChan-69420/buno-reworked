@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { SiteHeader } from '@/components/site-header'
 import { BudgetRangePanel } from '@/components/budget-range-panel'
@@ -10,10 +10,12 @@ import { calculateZone } from '@/lib/zone-engine'
 import { MonthComparisonPanel } from '@/components/month-comparison-panel'
 import { CategorySpendingPanel } from '@/components/category-spending-panel'
 import { categoryBreakdown, monthComparison } from '@/lib/spending-insights'
+import type { Transaction } from '@/lib/types'
 
 type TabId = 'budget' | 'insights' | 'transactions'
 
 const TAB_ORDER: TabId[] = ['budget', 'insights', 'transactions']
+const STORAGE_KEY = 'buno_cash_entries'
 
 interface SanctuaryProps {
   /** User-set budget from onboarding. Falls back to the sandbox default. */
@@ -22,6 +24,7 @@ interface SanctuaryProps {
 
 export function Sanctuary({ budget }: SanctuaryProps) {
   const [activeTab, setActiveTab] = useState<TabId>('budget')
+  const [manualTransactions, setManualTransactions] = useState<Transaction[]>([])
   const panelRef = useRef<HTMLDivElement>(null)
   const hasMounted = useRef(false)
   const isBudget = activeTab === 'budget'
@@ -29,24 +32,62 @@ export function Sanctuary({ budget }: SanctuaryProps) {
 
   const activeBudget = budget && budget > 0 ? budget : MONTHLY_BUDGET
 
+  // Sync manual transactions from localStorage
+  const syncTransactions = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) {
+          setManualTransactions(parsed)
+          return
+        }
+      }
+      setManualTransactions([])
+    } catch {
+      setManualTransactions([])
+    }
+  }, [])
+
+  useEffect(() => {
+    syncTransactions()
+
+    const handleStorageChange = () => syncTransactions()
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('buno_transactions_changed', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('buno_transactions_changed', handleStorageChange)
+    }
+  }, [syncTransactions])
+
+  // Combine manual transactions with sandbox seed transactions
+  const allTransactions = useMemo(() => {
+    return [...manualTransactions, ...SANDBOX_TRANSACTIONS]
+  }, [manualTransactions])
+
   const result = useMemo(
-    () => calculateZone(activeBudget, SANDBOX_TRANSACTIONS),
-    [activeBudget],
+    () => calculateZone(activeBudget, allTransactions),
+    [activeBudget, allTransactions],
   )
 
   const { comparison, categories } = useMemo(() => {
     const today = new Date()
     return {
-      comparison: monthComparison(SANDBOX_TRANSACTIONS, today),
-      categories: categoryBreakdown(SANDBOX_TRANSACTIONS, today),
+      comparison: monthComparison(allTransactions, today),
+      categories: categoryBreakdown(allTransactions, today),
     }
-  }, [])
+  }, [allTransactions])
 
   useEffect(() => {
     if (!hasMounted.current) {
       hasMounted.current = true
       return
     }
+    // Re-check transactions on tab switch to ensure latest state
+    syncTransactions()
+
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const tween = gsap.fromTo(
       panelRef.current,
@@ -56,7 +97,7 @@ export function Sanctuary({ budget }: SanctuaryProps) {
     return () => {
       tween.kill()
     }
-  }, [activeTab])
+  }, [activeTab, syncTransactions])
 
   function handleTabKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
@@ -105,7 +146,16 @@ export function Sanctuary({ budget }: SanctuaryProps) {
                 className="flex flex-1 flex-col p-6 py-4"
               >
                 {isBudget ? (
-                  <BudgetRangePanel zone={result.zone} pctSpent={result.pctSpent} />
+                  <BudgetRangePanel
+                    zone={result.zone}
+                    pctSpent={result.pctSpent}
+                    remainingPct={result.fillPct}
+                    remaining={result.remaining}
+                    spent={result.spent}
+                    budget={activeBudget}
+                    state={result.state}
+                    overspent={result.overspent}
+                  />
                 ) : (
                   <TransactionsPanel transactions={SANDBOX_TRANSACTIONS} />
                 )}
