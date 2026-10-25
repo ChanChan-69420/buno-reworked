@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { BunnyLogo } from '@/components/bunny-logo'
 
 type TabId = 'budget' | 'insights' | 'transactions'
 
@@ -19,18 +19,9 @@ export function SiteHeader({
 }) {
   return (
     <header className="sanctuary-navbar mt-5 flex h-[68px] min-h-[68px] shrink-0 items-center justify-between rounded-full border border-white/50 bg-card/55 px-3 shadow-lg shadow-black/10 backdrop-blur-md sm:px-6">
-      <div className="flex w-full items-center justify-center gap-3 sm:justify-between">
-        <div className="hidden min-w-0 items-center gap-3 sm:flex">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-white/60 shadow-xs">
-            <Image
-              src="/images/buno-logo.jpg"
-              alt="Buno logo"
-              fill
-              sizes="40px"
-              priority
-              className="object-cover scale-105"
-            />
-          </div>
+      <div className="flex w-full items-center justify-between gap-2 sm:justify-between">
+        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+          <BunnyLogo size={38} priority className="border border-white/60 shadow-xs" />
           <span className="font-serif text-xl font-semibold leading-none text-foreground">
             Buno
           </span>

@@ -17,12 +17,12 @@ export function BunnyLogo({
       style={{ width: size, height: size }}
     >
       <Image
-        src="/images/buno-logo.jpg"
-        alt="Buno logo"
+        src="/images/buno-bunny-logo.jpg"
+        alt="Buno bunny logo"
         width={size * 2}
         height={size * 2}
         priority={priority}
-        className="h-full w-full object-cover scale-105"
+        className="h-full w-full object-cover scale-[1.46]"
       />
     </div>
   )

@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   description:
     'A mindful budgeting sanctuary that shows spending zones instead of exact balances, so you can pace your month with peace of mind.',
   icons: {
-    icon: '/images/buno-logo.jpg',
+    icon: [
+      { url: '/images/buno-bunny-logo.jpg' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: '/images/buno-bunny-logo.jpg',
+    apple: '/images/buno-bunny-logo.jpg',
   },
 }
 
