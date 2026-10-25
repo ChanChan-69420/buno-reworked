@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Sanctuary } from '@/components/sanctuary'
+import { BunoApp } from '@/components/buno-app'
 
 export default function HomePage() {
   return (
@@ -14,7 +14,7 @@ export default function HomePage() {
           className="object-cover"
         />
       </div>
-      <Sanctuary />
+      <BunoApp />
     </>
   )
 }

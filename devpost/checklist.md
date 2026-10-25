@@ -49,15 +49,11 @@ Build mode: fast
   Learner check: Log a cash expense on the Activity tab. Watch the new row bounce in and the zone shift. Refresh — entry should still be there.
   Commit: `Add manual cash entry with validation, persistence, and bounce animation`
 
-- [ ] **5. Sketch Health Bar + GSAP Animations**
-  Becomes usable: The health bar transforms from a simple indicator to the full sketch-style SVG with feTurbulence hand-drawn effect, diagonal hatch fill, and GSAP stroke-draw animation on load and zone transitions.
-  Why now: This is the visual centerpiece. The functional kernel already works (slices 1-4); now we make it look like the design reference. Risk: feTurbulence + GSAP wiring is the most technically unfamiliar part — the learning moment from the spec.
-  PRD ref: `prd.md > Look and Feel` (Sketch-Style Health Bar), `prd.md > Zone Engine & Health Bar`
-  Spec ref: `spec.md > Components` (Health Bar SVG), `spec.md > Look and Feel`
-  Build: Rewrite `HealthBar.tsx` as full SVG. Add `feTurbulence` + `feDisplacementMap` filter for hand-drawn wobble. Diagonal hatch fill via SVG `<pattern>` with density varying by zone. GSAP animates `stroke-dasharray`/`stroke-dashoffset` for draw-in effect on mount and zone change. Hatch line count/spacing shifts per zone (Safe dense → Cautious sparse → Danger fragmented). Zone label typography updates.
-  Verify (mechanical): Health bar renders with visible hand-drawn wobble. Zone transitions animate smoothly. Change a transaction → bar redraws. Compare visually to `devpost/assets/sketch-health-bar.png`.
-  Learner check: Look at the health bar — does it match the sketch aesthetic from your design reference? Change your budget or log an expense and watch the bar animate to the new zone.
-  Commit: `Add sketch-style SVG health bar with feTurbulence filter and GSAP animation`
+- [x] **5. Sanctuary Budget Runway Bar + GSAP Animations + Spending Insights**
+  Becomes usable: Pacing Sanctuary dashboard is active with 3 navigable views: Budget Range, Spending Insights, and Transactions. Implements animated RunwayBar powered by GSAP with safe/cautious/critical thresholds, month-over-month cumulative spending trajectory charts, and category breakdown panels with GSAP staggered entrance animations.
+  PRD ref: prd.md > Look and Feel, prd.md > Zone Engine & Health Bar
+  Spec ref: spec.md > Components, spec.md > Look and Feel
+  Status: Built in Next.js + Tailwind v4 + GSAP (runway-bar.tsx, month-comparison-panel.tsx, category-spending-panel.tsx, sanctuary.tsx). Horizontal snap-scrolling transaction cards implemented.
 
 - [ ] **6. DANGER Modal + Human Notes + Refresh + Polish**
   Becomes usable: Budget ≤0% triggers a full-screen DANGER modal with GSAP shake. Human notes rotate on each visit/zone change. Refresh button regenerates sandbox data. Final visual polish.

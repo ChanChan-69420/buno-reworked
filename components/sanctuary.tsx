@@ -15,16 +15,23 @@ type TabId = 'budget' | 'insights' | 'transactions'
 
 const TAB_ORDER: TabId[] = ['budget', 'insights', 'transactions']
 
-export function Sanctuary() {
+interface SanctuaryProps {
+  /** User-set budget from onboarding. Falls back to the sandbox default. */
+  budget?: number | null
+}
+
+export function Sanctuary({ budget }: SanctuaryProps) {
   const [activeTab, setActiveTab] = useState<TabId>('budget')
   const panelRef = useRef<HTMLDivElement>(null)
   const hasMounted = useRef(false)
   const isBudget = activeTab === 'budget'
   const isInsights = activeTab === 'insights'
 
+  const activeBudget = budget && budget > 0 ? budget : MONTHLY_BUDGET
+
   const result = useMemo(
-    () => calculateZone(MONTHLY_BUDGET, SANDBOX_TRANSACTIONS),
-    [],
+    () => calculateZone(activeBudget, SANDBOX_TRANSACTIONS),
+    [activeBudget],
   )
 
   const { comparison, categories } = useMemo(() => {
@@ -86,7 +93,7 @@ export function Sanctuary() {
             <article className="card-sheen flex flex-col overflow-hidden rounded-3xl bg-card text-card-foreground shadow-2xl shadow-black/30">
               <div className="flex flex-col gap-2 border-b border-border px-6 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
                 <h1 className="font-serif text-2xl font-medium text-balance sm:text-3xl">
-                  Monthly Budget
+                  {isBudget ? 'Monthly Budget' : 'Monthly Transactions'}
                 </h1>
               </div>
 

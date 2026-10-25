@@ -128,6 +128,7 @@ export type InsightCategory =
   | 'other'
 
 const CATEGORY_GROUP: Record<Category, InsightCategory> = {
+  housing: 'housing',
   bills: 'housing',
   food: 'food',
   transport: 'transport',

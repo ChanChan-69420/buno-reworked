@@ -5,8 +5,12 @@
 .env
 .env.*
 !.env.example
+
 # Next.js
 /node_modules
 /.next
 next-env.d.ts
 *.tsbuildinfo
+
+# Duplicate archive directory
+/my-hackathon-project

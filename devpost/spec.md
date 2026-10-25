@@ -56,22 +56,16 @@ PRD ref: `prd.md > The Core Journey`
 3. DANGER modal mounts → GSAP shake animation + "Budget is empty now"
 4. User dismisses modal → app remains usable, health bar shows depleted state
 
-## Stack
+## Stack (Current Implementation)
 
 | Tool | Version | Why | Doc |
 |------|---------|-----|-----|
-| Vite | ^5.x | Fast dev server, instant HMR, simple build. No server config needed. | https://vitejs.dev |
-| React | ^18.x | UI framework the learner has used before (previous Buno). | https://react.dev |
-| TypeScript | ^5.x | Catches errors at save-time, not run-time. Better AI-agent debugging. | https://www.typescriptlang.org |
-| GSAP (core) | ^3.12 | Free animation library. Handles all motion: entrance, health bar, bounce, DANGER shake. | https://gsap.com/docs/v3/ |
-| React Router | ^6.x | Simple tab navigation (Zone ↔ Activity). Could use state instead, but router is standard and keeps URLs shareable. | https://reactrouter.com |
-
-**Learner-selected choices:**
-- Vite + React + TS — accepted recommendation. Familiar React knowledge, no backend overhead. Tradeoff: no server-side rendering (not needed).
-- SVG + GSAP stroke animation (not DrawSVG) — DrawSVG is paid; free `stroke-dasharray`/`stroke-dashoffset` achieves the same effect. Tradeoff: slightly more manual setup, zero cost.
-- All free utilities throughout — learner preference. No paid plugins, no Club GreenSock.
-
-**Unverified:** GSAP version compatibility with React 18 concurrent features — flag to check early in build. Fallback: GSAP works fine with React 18; the concern is only around `useEffect` timing.
+| Next.js (App Router) | 16.4.2 | Production React framework with App Router, server/client components, and instant dev refresh | https://nextjs.org/docs |
+| React | 19.2.0 | Core UI rendering library powering components and interactive tabs | https://react.dev |
+| TypeScript | 5.7.0 | Full type safety across transactions, zone calculators, and insight utilities | https://www.typescriptlang.org |
+| Tailwind CSS | 4.1.0 | Modern CSS engine for design system tokens (coffee/cream palette, glassmorphism, responsive cards) | https://tailwindcss.com |
+| GSAP | 3.12.5 | Animation library driving RunwayBar meter progress, view transitions, and staggered card reveals | https://gsap.com/docs/v3/ |
+| Lucide React | 0.468.0 | Icon set for categories (Utensils, Car, ShoppingBag, Receipt, Film, Ellipsis) | https://lucide.dev |
 
 ## Where It Runs and How Someone Tries It
 
@@ -217,43 +211,36 @@ PRD ref: `prd.md > Pseudo Bank Sandbox`
 - **Shape:** `{ remaining: number, pct: number, zone: string, note: string }`
 - **Updated:** Whenever budget or transactions change → Zone Engine recalculates
 
-## File Structure
+## File Structure (Current Implementation)
 
-```
-buno/
-├── src/
-│   ├── components/
-│   │   ├── App.tsx              # Root: state, routing, localStorage checks
-│   │   ├── Intro.tsx            # Entrance animation + premise
-│   │   ├── BudgetSetup.tsx      # First-visit budget input
-│   │   ├── ZoneTab.tsx          # Health bar, zone label, human note
-│   │   ├── ActivityTab.tsx      # Feed, cash entry form, refresh
-│   │   ├── DangerModal.tsx      # Full-screen DANGER overlay
-│   │   ├── HealthBar.tsx        # SVG sketch bar (the centerpiece)
-│   │   ├── TransactionRow.tsx   # Single feed row (icon, desc, date, badge)
-│   │   ├── CashEntryForm.tsx    # Manual entry form with validation
-│   │   └── icons/
-│   │       ├── BunnyLogo.tsx    # SVG bunny
-│   │       ├── FoodIcon.tsx
-│   │       ├── TransportIcon.tsx
-│   │       ├── ShoppingIcon.tsx
-│   │       ├── BillsIcon.tsx
-│   │       ├── EntertainmentIcon.tsx
-│   │       └── OtherIcon.tsx
-│   ├── lib/
-│   │   ├── zoneEngine.ts        # Pure calculation: budget + txns → zone
-│   │   ├── storage.ts           # localStorage read/write helpers
-│   │   ├── notes.ts             # Human note arrays per zone
-│   │   └── sandboxData.ts       # Pseudo-bank transaction pool (~30)
-│   ├── types.ts                 # Transaction, Zone, etc.
-│   ├── App.css                  # Global styles, CSS variables (palette)
-│   └── main.tsx                 # Entry point
-├── devpost/                     # Devpost learning workspace
-├── index.html
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
-```
+`
+buno-reworked/
+├── app/
+│   ├── globals.css                # Tailwind v4 configuration, theme colors & keyframes
+│   ├── layout.tsx                 # Root HTML structure, Google fonts (DM Sans & Playfair Display)
+│   └── page.tsx                   # Main entry point mounting Forest Sanctuary & Sanctuary dashboard
+├── components/
+│   ├── sanctuary.tsx              # Core Sanctuary dashboard container with tabbed views & GSAP transitions
+│   ├── site-header.tsx            # Floating pill navbar with tabs (Budget Range, Spending Insights, Transactions)
+│   ├── budget-range-panel.tsx     # Current zone qualitative indicator, budget bar, and zone breakdown
+│   ├── runway-bar.tsx             # GSAP-animated budget runway meter with threshold markers
+│   ├── category-spending-panel.tsx# Category outflow breakdown with rank, share, and GSAP staggered reveal
+│   ├── month-comparison-panel.tsx # SVG monotone cubic curve chart comparing month-to-date spending
+│   ├── transactions-panel.tsx     # Horizontal snap-scrolling transaction cards with category icons
+│   └── category-icon.tsx          # Lucide-based category icons (Food, Transport, Shopping, Bills, Entertainment, Other)
+├── lib/
+│   ├── types.ts                   # Category, Transaction, ZoneId, and ZoneResult types
+│   ├── zone-engine.ts             # Deterministic zone math (Safe >60%, Cautious 20-60%, Critical <20%)
+│   ├── zone-copy.ts               # Qualitative tone descriptors and messaging per zone
+│   ├── spending-insights.ts       # Cumulative daily spending series, trend verdicts, and category breakdowns
+│   └── sandbox-data.ts            # Realistic default monthly budget (₹25,000) & sandbox transactions
+├── public/
+│   └── images/
+│       └── forest-sanctuary.png   # Atmospheric nature background backdrop
+├── devpost/                       # Project documentation, PRD, specs, and checklists
+├── package.json                   # Next.js 16.4, React 19.2, Tailwind CSS 4.1, GSAP 3.12, Lucide React
+└── tsconfig.json
+`
 
 ## External Services and Dependencies
 

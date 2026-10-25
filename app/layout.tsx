@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: 'Buno | Pacing Sanctuary',
   description:
     'A mindful budgeting sanctuary that shows spending zones instead of exact balances, so you can pace your month with peace of mind.',
+  icons: {
+    icon: '/images/buno-logo.jpg',
+  },
 }
 
 export const viewport: Viewport = {
