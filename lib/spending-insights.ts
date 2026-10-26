@@ -1,3 +1,4 @@
+import { LAST_MONTH_TRANSACTIONS } from './sandbox-data'
 import type { Category, Transaction } from './types'
 
 const TIME_ZONE = 'Asia/Kolkata'
@@ -53,6 +54,7 @@ export interface MonthSeries {
   points: { day: number; cumulative: number }[]
   total: number
   hasData: boolean
+  expenses: Transaction[]
 }
 
 function cumulativeSeries(
@@ -78,6 +80,10 @@ function cumulativeSeries(
     points.push({ day, cumulative: running })
   }
 
+  const sortedExpenses = [...expenses].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  )
+
   return {
     year,
     month,
@@ -85,16 +91,18 @@ function cumulativeSeries(
     points,
     total: running,
     hasData: expenses.length > 0,
+    expenses: sortedExpenses,
   }
 }
 
 export function monthComparison(transactions: Transaction[], today: Date) {
   const now = toCalendarDay(today)
   const prev = previousMonth(now.year, now.month)
+  const combinedForComparison = [...transactions, ...LAST_MONTH_TRANSACTIONS]
   return {
     current: cumulativeSeries(transactions, now.year, now.month, now.day),
     previous: cumulativeSeries(
-      transactions,
+      combinedForComparison,
       prev.year,
       prev.month,
       daysInMonth(prev.year, prev.month),

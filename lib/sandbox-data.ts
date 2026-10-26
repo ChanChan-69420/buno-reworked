@@ -21,3 +21,23 @@ export const SANDBOX_TRANSACTIONS: Transaction[] = [
   { id: 't15', description: 'Spotify', category: 'entertainment', amount: 119, date: '2026-10-04T00:10:00+05:30', source: 'bank' },
   { id: 't16', description: 'Pharmacy', category: 'other', amount: 380, date: '2026-10-03T12:35:00+05:30', source: 'bank' },
 ]
+
+// Seed transactions for last month (September 2026) used in the Insights comparison chart.
+export const LAST_MONTH_TRANSACTIONS: Transaction[] = [
+  { id: 'p01', description: 'Blinkit essentials', category: 'food', amount: 680, date: '2026-09-29T19:40:00+05:30', source: 'bank' },
+  { id: 'p02', description: 'Weekend dinner at Truffles', category: 'food', amount: 1450, date: '2026-09-27T21:15:00+05:30', source: 'bank' },
+  { id: 'p03', description: 'Nykaa skincare', category: 'shopping', amount: 1180, date: '2026-09-25T15:20:00+05:30', source: 'bank' },
+  { id: 'p04', description: 'Ola airport cab', category: 'transport', amount: 890, date: '2026-09-23T06:45:00+05:30', source: 'bank' },
+  { id: 'p05', description: 'Third Wave Coffee', category: 'food', amount: 420, date: '2026-09-21T16:10:00+05:30', source: 'bank' },
+  { id: 'p06', description: 'Decathlon gear', category: 'shopping', amount: 1850, date: '2026-09-19T12:30:00+05:30', source: 'bank' },
+  { id: 'p07', description: 'Netflix', category: 'entertainment', amount: 649, date: '2026-09-18T00:05:00+05:30', source: 'bank' },
+  { id: 'p08', description: 'BESCOM electricity', category: 'bills', amount: 1240, date: '2026-09-16T10:50:00+05:30', source: 'bank' },
+  { id: 'p09', description: 'Metro card top-up', category: 'transport', amount: 500, date: '2026-09-14T09:15:00+05:30', source: 'bank' },
+  { id: 'p10', description: 'IMAX movie night', category: 'entertainment', amount: 980, date: '2026-09-12T20:00:00+05:30', source: 'bank' },
+  { id: 'p11', description: 'BigBasket monthly stock', category: 'food', amount: 1620, date: '2026-09-10T11:20:00+05:30', source: 'bank' },
+  { id: 'p12', description: 'Airtel Wi-Fi & mobile', category: 'bills', amount: 999, date: '2026-09-08T09:30:00+05:30', source: 'bank' },
+  { id: 'p13', description: 'Zara apparel', category: 'shopping', amount: 2190, date: '2026-09-06T17:45:00+05:30', source: 'bank' },
+  { id: 'p14', description: 'Local bookshop', category: 'other', amount: 450, date: '2026-09-05T14:10:00+05:30', source: 'cash' },
+  { id: 'p15', description: 'Spotify', category: 'entertainment', amount: 119, date: '2026-09-04T00:10:00+05:30', source: 'bank' },
+  { id: 'p16', description: 'Swiggy Instamart', category: 'food', amount: 540, date: '2026-09-02T18:25:00+05:30', source: 'bank' },
+]
